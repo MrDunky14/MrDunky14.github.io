@@ -9,68 +9,60 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- GSAP CDNs (for complex animations and timeline control) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <style>
-        /* Configure Tailwind to use custom colors defined in :root */
         @tailwind base;
         @tailwind components;
         @tailwind utilities;
 
         :root {
-            /* Refined Professional Dark Palette (Softer Blues/Greys, Tech-focused) */
-            --color-primary-bg: #111827;    /* Even Darker Slate Blue - for better contrast */
-            --color-secondary-bg: #1F2937;  /* Dark Blue-Grey - sections */
-            --color-card-bg: #374151;       /* Medium Blue-Grey - cards, subtle lift */
-            --color-main-text: #E5E7EB;     /* Soft Off-White/Light Grey - main body text */
-            --color-accent: #34D399;        /* Vibrant Emerald Green - headings, buttons, links, highlights */
+            --color-primary-bg: #111827;
+            --color-secondary-bg: #1F2937;
+            --color-card-bg: #374151;
+            --color-main-text: #E5E7EB;
+            --color-accent: #34D399;
         }
 
-        /* --- NEW --- Particle Canvas Style */
         #particle-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* Positioned behind content */
+            z-index: 1;
         }
         
-        /* Base body styles, disabling overflow for full-page transitions */
         body {
             font-family: 'Inter', sans-serif;
             color: var(--color-main-text);
             background-color: var(--color-primary-bg);
             -webkit-font-smoothing: antialiased;
-            overflow: hidden; /* Crucial for controlling page scrolling during transitions */
+            overflow: hidden;
             height: 100vh;
             position: relative;
         }
 
-        /* Class to prevent scrolling on the body when modal is open */
         body.no-scroll {
             overflow: hidden;
         }
 
-        /* Transition overlay elements */
-        .transition-cover-top,
-        .transition-cover-bottom {
-            content: '';
-            height: 50vh;
-            width: 100%;
+        /* --- NEW: Simplified page transition overlay --- */
+        #transition-overlay {
             position: fixed;
+            top: 0;
             left: 0;
-            background: #1c2020;
-            z-index: 500;
-            visibility: hidden;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-primary-bg);
+            z-index: 5000;
             opacity: 0;
+            visibility: hidden;
         }
-        .transition-cover-top { top: 0; transform: translateY(-100%); }
-        .transition-cover-bottom { bottom: 0; transform: translateY(100%); }
 
         /* Custom scrollbar */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--color-secondary-bg); border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: var(--color-secondary-bg); }
         ::-webkit-scrollbar-thumb { background: var(--color-card-bg); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--color-accent); }
 
@@ -86,6 +78,8 @@
         .is-visible .fade-in-section:nth-child(3) { transition-delay: 0.3s; }
         .is-visible .fade-in-section:nth-child(4) { transition-delay: 0.4s; }
         .is-visible .fade-in-section:nth-child(5) { transition-delay: 0.5s; }
+        .is-visible .fade-in-section:nth-child(6) { transition-delay: 0.6s; }
+
 
         /* Hero Section Animations */
         .hero-animation-img, .hero-animation-text, .hero-animation-buttons {
@@ -97,22 +91,18 @@
         .hero-animation-buttons { transform: translateY(20px); transition-delay: 0.7s; }
         .active-content .hero-animation-img, .active-content .hero-animation-text, .active-content .hero-animation-buttons { opacity: 1; transform: scale(1) translateY(0); }
         
-        /* Universal button glow effect on hover */
         .btn-glow:hover {
             box-shadow: 0 0 8px var(--color-accent), 0 0 16px var(--color-accent), 0 0 24px var(--color-accent);
         }
 
-        /* Card hover effect for skills and project tiles */
         .card-hover-effect {
             transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 25px rgba(3, 201, 152, 0.1);
         }
         .card-hover-effect:hover {
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 30px rgba(3, 201, 152, 0.2);
-            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            transform: translateY(-5px);
         }
         
-        /* Main Slideshow Sections */
         .slideshow-section {
             height: 100vh;
             width: 100vw;
@@ -125,32 +115,28 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            padding-top: 6rem; /* space for header */
+            padding-top: 6rem;
             padding-bottom: 2rem;
             box-sizing: border-box;
-            backface-visibility: hidden;
-            transition: opacity 0.8s ease-in-out;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
             overflow-y: auto;
             overflow-x: hidden;
-            z-index: 10; /* Positioned above the canvas */
+            z-index: 10;
         }
         .slideshow-section.active { opacity: 1; visibility: visible; }
         
-        /* --- IMPROVED --- Navbar styling */
         header {
             position: fixed;
             width: 100%;
             top: 0;
             left: 0;
             z-index: 1000;
-            /* Glassmorphism effect */
-            background-color: rgba(31, 41, 55, 0.6); /* --color-secondary-bg with alpha */
+            background-color: rgba(31, 41, 55, 0.6);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* For Safari */
+            -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(107, 114, 128, 0.2);
         }
 
-        /* --- IMPROVED --- Nav link hover effect */
         header nav ul a {
             position: relative;
             padding: 8px 12px;
@@ -170,117 +156,69 @@
             transform-origin: bottom right;
             transition: transform 0.25s ease-out;
         }
-        header nav ul a:hover {
-            color: var(--color-accent);
-        }
-        header nav ul a:hover::after {
-            transform: scaleX(1);
-            transform-origin: bottom left;
-        }
+        header nav ul a:hover { color: var(--color-accent); }
+        header nav ul a:hover::after { transform: scaleX(1); transform-origin: bottom left; }
 
-        /* Navigation dots */
         .nav-dots { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); z-index: 900; display: flex; flex-direction: column; gap: 10px; }
         .nav-dot { width: 12px; height: 12px; background-color: var(--color-card-bg); border-radius: 50%; cursor: pointer; transition: background-color 0.3s ease, transform 0.3s ease; border: 1px solid var(--color-accent); }
         .nav-dot.active { background-color: var(--color-accent); transform: scale(1.2); }
         @media (max-width: 767px) { .nav-dots { right: 10px; gap: 8px; } .nav-dot { width: 10px; height: 10px; } }
 
-        /* Loader animation styles */
-        .loader { margin: 0 auto; width: 60px; height: 50px; text-align: center; font-size: 10px; position: absolute; top: 50%; left: 50%; transform: translateY(-50%) translateX(-50%); z-index: 600; opacity: 0; visibility: hidden; }
-        .loader > div { height: 100%; width: 8px; display: inline-block; float: left; margin-left: 2px; animation: delay 0.8s infinite ease-in-out; background-color: var(--color-accent); }
-        @keyframes delay { 0%, 40%, 100% { transform: scaleY(0.05); } 20% { transform: scaleY(1.0); } }
-
-        /* --- IMPROVED --- About Me Section Styles */
-        #about .content-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            max-width: 900px;
-            width: 100%;
-        }
-        @media (min-width: 768px) {
-            #about .content-container {
-                grid-template-columns: auto 1fr;
-                gap: 4rem;
-                align-items: flex-start;
-            }
-        }
-        #about .about-title-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            justify-content: center;
-        }
-        @media (min-width: 768px) {
-            #about .about-title-wrapper {
-                flex-direction: column;
-                justify-content: flex-start;
-            }
-            #about .about-title-wrapper h2 {
-                writing-mode: vertical-rl;
-                transform: rotate(180deg);
-                margin: 0;
-            }
-        }
-        #about .about-decorator-line {
-            width: 3px;
-            height: 100px;
-            background: var(--color-accent);
-            border-radius: 3px;
-        }
-        @media (max-width: 767px) {
-            #about .about-decorator-line {
-                width: 100px;
-                height: 3px;
-            }
-        }
-        #about .prose p {
-            margin-bottom: 1.5rem;
-        }
+        #about .content-container { display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 900px; width: 100%; }
+        @media (min-width: 768px) { #about .content-container { grid-template-columns: auto 1fr; gap: 4rem; align-items: flex-start; } }
+        #about .about-title-wrapper { display: flex; align-items: center; gap: 1rem; justify-content: center; }
+        @media (min-width: 768px) { #about .about-title-wrapper { flex-direction: column; justify-content: flex-start; } #about .about-title-wrapper h2 { writing-mode: vertical-rl; transform: rotate(180deg); margin: 0; } }
+        #about .about-decorator-line { width: 3px; height: 100px; background: var(--color-accent); border-radius: 3px; }
+        @media (max-width: 767px) { #about .about-decorator-line { width: 100px; height: 3px; } }
+        #about .prose p { margin-bottom: 1.5rem; }
         
-        /* Other utility styles remain largely unchanged */
-        .content-box-style { background-color: var(--color-card-bg); border-radius: 0.75rem; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 200, 150, 0.15); transition: all 0.3s ease-in-out; transform: translateY(0); }
-        .content-box-style:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 50px rgba(0, 200, 150, 0.25); }
-        
-        /* Project Carousel, Modal, and other styles */
+        /* Projects Carousel, Modal, etc. */
         .projects-carousel-container { position: relative; width: 100%; max-width: 1200px; margin: 0 auto; overflow: hidden; padding: 0 1rem; }
         .projects-carousel-track { display: flex; transition: transform 0.5s ease-in-out; will-change: transform; width: max-content; padding-bottom: 1rem; }
-        .project-tile { flex-shrink: 0; width: 90vw; max-width: 320px; margin-right: 20px; cursor: pointer; scroll-snap-align: start; }
+        .project-tile { flex-shrink: 0; width: 90vw; max-width: 320px; margin-right: 20px; cursor: pointer; scroll-snap-align: start; background-color: var(--color-card-bg); border-radius: 0.75rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
         .carousel-nav-button { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(0, 0, 0, 0.5); color: white; border: none; padding: 10px; cursor: pointer; z-index: 10; border-radius: 50%; font-size: 1.5rem; line-height: 1; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; transition: background-color 0.3s ease; }
         .carousel-nav-button:hover { background-color: rgba(0, 0, 0, 0.7); }
         .carousel-nav-button.left { left: 5px; } .carousel-nav-button.right { right: 5px; }
         .project-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease; }
         .project-modal-overlay.open { opacity: 1; visibility: visible; }
-        .project-modal-content { background-color: var(--color-card-bg); border-radius: 1rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 0 0 80px rgba(0, 200, 150, 0.3); padding: 1.5rem; max-width: 95%; max-height: 90%; overflow-y: auto; position: relative; transform: scale(0.8); opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease; display: flex; flex-direction: column; gap: 1rem; }
+        .project-modal-content { background-color: var(--color-secondary-bg); border-radius: 1rem; box-shadow: 0 10px 40px rgba(0,0,0,0.9); padding: 1.5rem; max-width: 95%; max-height: 90%; overflow-y: auto; position: relative; transform: scale(0.8); opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease; display: flex; flex-direction: column; gap: 1rem; }
         .project-modal-overlay.open .project-modal-content { transform: scale(1); opacity: 1; }
         .project-modal-close-button { position: absolute; top: 0.75rem; right: 0.75rem; background: none; border: none; color: var(--color-main-text); font-size: 2rem; cursor: pointer; padding: 0.5rem; border-radius: 50%; transition: background-color 0.2s ease, color 0.2s ease; }
         .project-modal-close-button:hover { background-color: rgba(255, 255, 255, 0.1); color: var(--color-accent); }
-        .project-modal-content img { width: 100%; height: auto; border-radius: 0.5rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
-        .skill-item { display: flex; align-items: center; gap: 0.75rem; }
-        .skill-icon { width: 1.5rem; height: 1.5rem; color: var(--color-accent); flex-shrink: 0; }
-        .skill-name { font-weight: 500; color: var(--color-main-text); }
         
         @media (min-width: 768px) {
             .projects-carousel-container { padding: 0 2rem; }
             .project-tile { width: 350px; }
-            .carousel-nav-button.left { left: 10px; } .carousel-nav-button.right { right: 10px; }
             .project-modal-content { flex-direction: row; max-width: 80%; max-height: 80%; padding: 2rem; gap: 1.5rem; }
+        }
+
+        /* --- NEW: Skills Section Styles --- */
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem; /* 12px */
+            padding: 0.5rem 0; /* 8px */
+            font-weight: 500;
+            color: var(--color-main-text);
+            transition: color 0.2s ease-in-out;
+        }
+        .skill-item:hover {
+            color: var(--color-accent);
+        }
+        .skill-icon {
+            width: 1.25rem; /* 20px */
+            height: 1.25rem; /* 20px */
+            flex-shrink: 0;
+            color: var(--color-accent);
         }
     </style>
 </head>
 <body class="antialiased">
-    <!-- Loader HTML (Displayed during page transitions) -->
-    <div class="loader">
-        <div class="bar1"></div><div class="bar2"></div><div class="bar3"></div><div class="bar4"></div><div class="bar5"></div><div class="bar6"></div>
-    </div>
 
-    <!-- Elements for the screen transition overlay -->
-    <div class="transition-cover-top"></div>
-    <div class="transition-cover-bottom"></div>
+    <div id="transition-overlay"></div>
     
-    <!-- --- NEW --- The canvas for the particle background animation -->
     <canvas id="particle-canvas"></canvas>
 
-    <!-- Navbar -->
     <header class="py-2 px-3 md:px-6">
         <nav class="container mx-auto flex justify-between items-center">
             <a href="#" class="text-xl md:text-2xl font-extrabold text-[var(--color-accent)] transition-all duration-300 transform hover:scale-105" data-section-index="0">Krishna Singh</a>
@@ -348,45 +286,84 @@
             </div>
         </section>
         
-        <!-- === FIXED: Skills Section === -->
+        <!-- === NEW: Skills Section === -->
         <section id="skills" class="slideshow-section p-4 sm:p-6 md:p-12">
             <div class="is-visible w-full h-full flex flex-col items-center justify-center max-w-6xl mx-auto px-4">
-                 <h2 class="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-8 fade-in-section">My Skillset</h2>
-                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 w-full">
-                    <!-- Skill Item Example -->
-                    <div class="p-4 md:p-6 bg-[var(--color-card-bg)] rounded-lg flex flex-col items-center justify-center text-center card-hover-effect fade-in-section">
-                        <svg class="w-12 h-12 mb-3 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
-                        <h3 class="font-semibold text-base md:text-lg">Python</h3>
+                 <h2 class="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-10 text-center fade-in-section">Technical Proficiency</h2>
+                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full">
+                    
+                    <!-- Languages & Databases -->
+                    <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
+                        <h3 class="text-xl font-bold text-white mb-4">Languages & Databases</h3>
+                        <ul>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14.44,9.16c-1-.29-1.33-.6-1.33-1.05,0-.44.33-.81.93-.81.67,0,1.21.37,1.35,1.06l1.9-.83C17.03,6.5,16.08,5.7,14.6,5.7c-1.73,0-2.88,1.11-2.88,2.6,0,1.8,1.55,2.4,2.56,2.68,1.13.32,1.41.64,1.41,1.1,0,.53-.47.93-1.1.93-.78,0-1.28-.4-1.43-1.13l-1.9.86c.29,1.3,1.54,2.05,2.83,2.05,1.84,0,3.06-1.1,3.06-2.67,0-1.87-1.57-2.48-2.69-2.79M9.56,9.16c-1-.29-1.33-.6-1.33-1.05,0-.44.33-.81.93-.81.67,0,1.21.37,1.35,1.06l1.9-.83C12.13,6.5,11.18,5.7,9.7,5.7c-1.73,0-2.88,1.11-2.88,2.6,0,1.8,1.55,2.4,2.56,2.68,1.13.32,1.41.64,1.41,1.1,0,.53-.47.93-1.1.93-.78,0-1.28-.4-1.43-1.13l-1.9.86c.29,1.3,1.54,2.05,2.83,2.05,1.84,0,3.06-1.1,3.06-2.67,0-1.87-1.57-2.48-2.69-2.79Z"/></svg> Python</li>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"/><path d="M12.24,6.79a5.3,5.3,0,0,0-2.58.69L10.7,9.3a3.5,3.5,0,0,1,2.53-.42,2.32,2.32,0,0,1,1.47.78,3.23,3.23,0,0,1,.1,4.19,2.87,2.87,0,0,1-1.43.89,4.2,4.2,0,0,1-2.73,0l-.77,1.8,2.23.94a5,5,0,0,0,2.68-.69,4.64,4.64,0,0,0,2.1-3.2,5.2,5.2,0,0,0-.17-4.48A4.18,4.18,0,0,0,12.24,6.79Z"/></svg> R</li>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4,3H20A2,2,0,0,1,22,5V9A2,2,0,0,1,20,11H4A2,2,0,0,1,2,9V5A2,2,0,0,1,4,3M12.5,9A1.5,1.5,0,1,0,11,7.5,1.5,1.5,0,0,0,12.5,9M4,13H20A2,2,0,0,1,22,15V19A2,2,0,0,1,20,21H4A2,2,0,0,1,2,19V15A2,2,0,0,1,4,13M12.5,19A1.5,1.5,0,1,0,11,17.5,1.5,1.5,0,0,0,12.5,19Z" /></svg> SQL</li>
+                        </ul>
                     </div>
-                    <div class="p-4 md:p-6 bg-[var(--color-card-bg)] rounded-lg flex flex-col items-center justify-center text-center card-hover-effect fade-in-section">
-                        <svg class="w-12 h-12 mb-3 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        <h3 class="font-semibold text-base md:text-lg">Machine Learning</h3>
+                    
+                    <!-- ML Frameworks & Libraries -->
+                    <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
+                        <h3 class="text-xl font-bold text-white mb-4">ML Frameworks & Libraries</h3>
+                        <ul>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6.2,3.19,12,6.5,17.8,3.19,12,0ZM4.73,4.39,10.53,1.12v11L4.73,8.78Zm14.54,0L13.47,1.12v11l5.8,3.25ZM12,17.5,6.2,14.19,12,21l5.8-6.81Z"/></svg> TensorFlow</li>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="m21.232 9.034c.01-.215.023-.43.023-.651 0-2.529-2.046-4.575-4.575-4.575-1.196 0-2.282.459-3.109 1.217l-5.618 5.618c.243.084.475.198.691.34l5.122-5.122c.571-.571 1.492-.571 2.062 0 .571.571.571 1.492 0 2.062l-6.852 6.852c-.067.067-.139.129-.215.184l-2.618-2.618 6.069-6.069c-.77-.593-1.748-.944-2.812-.944-2.127 0-3.852 1.725-3.852 3.852s1.725 3.852 3.852 3.852c.243 0 .48-.023.712-.062l-3.326 3.326c-.638.638-.638 1.671 0 2.309.638.638 1.671.638 2.309 0l3.705-3.705c.062.243.145.475.254.691l-3.217 3.217c-.96.96-2.512.96-3.472 0-.96-.96-.96-2.512 0-3.472l3.326-3.326c.034-.238.051-.482.051-.732 0-1.115-.906-2.021-2.021-2.021s-2.021.906-2.021 2.021c0 .26 0 .512.062.75l-2.91 2.91c-1.282 1.282-1.282 3.359 0 4.641 1.282 1.282 3.359 1.282 4.641 0l2.91-2.91c.238.062.49.096.75.096 1.115 0 2.021-.906 2.021-2.021 0-.011 0-.023 0-.034l7.106-7.106c.744.832 1.793 1.349 2.977 1.349 2.083 0 3.774-1.691 3.774-3.774 0-1.217-.577-2.309-1.481-2.977z"/></svg> PyTorch</li>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20.94 11A8.44 8.44 0 0 0 12.5 3.06A8.44 8.44 0 0 0 4.06 11H3v2h1.06a8.44 8.44 0 0 0 8.44 7.94A8.44 8.44 0 0 0 21 13h1v-2zM12.5 19a6.44 6.44 0 0 1-6.44-6.44A6.44 6.44 0 0 1 12.5 6.13A6.44 6.44 0 0 1 18.94 12.5 6.44 6.44 0 0 1 12.5 19z" /></svg> Scikit-Learn, Pandas, NumPy</li>
+                        </ul>
                     </div>
-                     <div class="p-4 md:p-6 bg-[var(--color-card-bg)] rounded-lg flex flex-col items-center justify-center text-center card-hover-effect fade-in-section">
-                        <svg class="w-12 h-12 mb-3 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        <h3 class="font-semibold text-base md:text-lg">TensorFlow</h3>
+                    
+                    <!-- AI/ML Concepts -->
+                    <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
+                        <h3 class="text-xl font-bold text-white mb-4">AI/ML Concepts</h3>
+                        <ul>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 15.5c-2.8 0-5.46-1.1-7.42-3.08l1.42-1.42C7.65 12.65 9.71 13.5 12 13.5s4.35-.85 5.99-2.5l1.42 1.42C17.46 14.4 14.8 15.5 12 15.5zm-5-4.5c-1.38 0-2.5-1.12-2.5-2.5S5.62 6 7 6s2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5zm10 0c-1.38 0-2.5-1.12-2.5-2.5S15.62 6 17 6s2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Deep & Machine Learning</li>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20,4H4A2,2,0,0,0,2,6V18a2,2,0,0,0,2,2H20a2,2,0,0,0,2-2V6A2,2,0,0,0,20,4M7,15.5H5.5v-7H7M10.75,15.5H9.25V8.5h4v1.5H10.75M18.5,14H15V15.5h-1.5v-7H15V11h3.5v1.5H15V14Z" /></svg> Natural Language Processing</li>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12,9A3,3,0,0,0,9,12A3,3,0,0,0,12,15A3,3,0,0,0,15,12A3,3,0,0,0,12,9M12,17A5,5,0,0,1,7,12A5,5,0,0,1,12,7A5,5,0,0,1,17,12A5,5,0,0,1,12,17M12,4.5C7,4.5,2.73,7.61,1,12c1.73,4.39,6,7.5,11,7.5s9.27-3.11,11-7.5C21.27,7.61,17,4.5,12,4.5Z"/></svg> Computer Vision</li>
+                        </ul>
                     </div>
-                     <div class="p-4 md:p-6 bg-[var(--color-card-bg)] rounded-lg flex flex-col items-center justify-center text-center card-hover-effect fade-in-section">
-                         <svg class="w-12 h-12 mb-3 text-[var(--color-accent)]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.378 1.602a.75.75 0 00-.756 0L3.366 6.166A.75.75 0 003 6.828v10.344a.75.75 0 00.366.662l8.256 4.564a.75.75 0 00.756 0l8.256-4.564a.75.75 0 00.366-.662V6.828a.75.75 0 00-.366-.662L12.378 1.602zM12 16.5a4.5 4.5 0 110-9 4.5 4.5 0 010 9z" /><path d="M12 14.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" /></svg>
-                        <h3 class="font-semibold text-base md:text-lg">PyTorch</h3>
+
+                    <!-- Tools & Platforms -->
+                    <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
+                        <h3 class="text-xl font-bold text-white mb-4">Tools & Platforms</h3>
+                        <ul>
+                            <li class="skill-item"><svg class="skill-icon" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.286 2.55 7.94 6.06 9.385.44.082.6-.192.6-.427V18.73c-2.43.528-2.94-1.17-2.94-1.17-.4-.993-1-1.27-1-1.27-.8-.546.06-.535.06-.535.88.062 1.35.903 1.35.903.78 1.336 2.04 1.026 2.54.784.08-.61.3-1.025.55-1.26-1.94-.22-3.98-.97-3.98-4.32 0-.954.34-1.734.9-2.34-.09-.22-.39-1.11.08-2.31 0 0 .73-.235 2.4 1.435a8.4 8.4 0 012.2-.298c.75.002 1.5.1 2.2.298 1.66-1.67 2.39-1.435 2.39-1.435.48 1.2.18 2.09.09 2.31.56.606.9 1.386.9 2.34 0 3.36-2.04 4.1-3.99 4.31.31.268.58.798.58 1.61v2.38c0 .237.16.51.6.426A10.007 10.007 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"/></svg> Git & GitHub</li>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22.1,8.93a2.4,2.4,0,0,0-.45-3,2.44,2.44,0,0,0-1.89-1.16,3.69,3.69,0,0,0-1.31-.21H6.13A3.69,3.69,0,0,0,4.82,4.77,2.44,2.44,0,0,0,2.93,5.93a2.4,2.4,0,0,0-.45,3,3.47,3.47,0,0,0,.45,1.26,2.23,2.23,0,0,0,0,2.71,3.47,3.47,0,0,0-.45,1.26,2.4,2.4,0,0,0,.45,3A2.44,2.44,0,0,0,4.82,20.27a3.69,3.69,0,0,0,1.31.21H18.42a3.69,3.69,0,0,0,1.31-.21,2.44,2.44,0,0,0,1.89-1.16,2.4,2.4,0,0,0,.45-3,3.47,3.47,0,0,0-.45-1.26,2.23,2.23,0,0,0,0-2.71A3.47,3.47,0,0,0,22.1,8.93ZM8.5,14.6H5.7V8H8.5Zm4.3,0H10V8h2.8Zm4.2,0H14.2V8H17Z"/></svg> Docker</li>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10,0,0,0,2,12a9.89,9.89,0,0,0,1.7,5.55L5.12,20.9A8,8,0,0,1,4,12a8,8,0,0,1,8-8,7.91,7.91,0,0,1,5.66,2.34L15.54,4.22A5.94,5.94,0,0,0,12,6,6,6,0,0,0,6,12a6,6,0,0,0,1.76,4.24l-1.6,1.6A7.92,7.92,0,0,1,4,12a8,8,0,0,1,8-8,7.91,7.91,0,0,1,5.66,2.34,8,8,0,0,1,0,11.32,7.91,7.91,0,0,1-5.66,2.34A8,8,0,0,1,4,12a7.91,7.91,0,0,1,2.34-5.66L8.46,8.46A5.94,5.94,0,0,0,6,12a6,6,0,0,0,6,6,5.94,5.94,0,0,0,4.24-1.76L18.36,18.36A8,8,0,0,1,12,20,10,10,0,0,0,22,12,9.89,9.89,0,0,0,20.3,6.45L18.88,3.1A8,8,0,0,1,20,12a8,8,0,0,1-8,8,7.91,7.91,0,0,1-5.66-2.34L8.46,15.54A5.94,5.94,0,0,0,12,18a6,6,0,0,0,6-6,5.94,5.94,0,0,0-1.76-4.24L14.12,5.64A7.92,7.92,0,0,1,20,12a8,8,0,0,1-8,8,7.91,7.91,0,0,1-5.66-2.34L4.22,15.54A10,10,0,0,0,12,22,10,10,0,0,0,22,12Z"/></svg> AWS (S3, EC2)</li>
+                        </ul>
                     </div>
-                     <div class="p-4 md:p-6 bg-[var(--color-card-bg)] rounded-lg flex flex-col items-center justify-center text-center card-hover-effect fade-in-section">
-                        <svg class="w-12 h-12 mb-3 text-[var(--color-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
-                        <h3 class="font-semibold text-base md:text-lg">Data Science</h3>
+
+                    <!-- Databases -->
+                    <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
+                        <h3 class="text-xl font-bold text-white mb-4">Databases</h3>
+                         <ul>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10,10-4.48,10-10S17.52,2,12,2Zm3.5,13.5c-1.38,0-2.5-1.12-2.5-2.5s1.12-2.5,2.5-2.5,2.5,1.12,2.5,2.5-1.12,2.5-2.5,2.5Z"/></svg> MongoDB</li>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v8h-2v-8z"/></svg> PostgreSQL</li>
+                        </ul>
                     </div>
-                     <!-- Add more skills as needed -->
+                    
+                    <!-- Professional Skills -->
+                    <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
+                        <h3 class="text-xl font-bold text-white mb-4">Professional Skills</h3>
+                        <ul>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20.71,4.04C20.32,3.65,19.69,3.65,19.3,4.04L13.5,9.84l-2.12-2.12c-.78-.78-2.05-.78-2.83,0L3.71,12.56c-.78,.78-.78,2.05,0,2.83l2.83,2.83c.78,.78,2.05,.78,2.83,0l4.85-4.85,2.12,2.12c.39,.39,1.02,.39,1.41,0l5.66-5.66c.39-.39,.39-1.02,0-1.41Z" /></svg> Problem Solving</li>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10,17l5-5-5-5v10Z"/></svg> Critical Thinking</li>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15,12c2.21,0,4-1.79,4-4s-1.79-4-4-4-4,1.79-4,4,1.79,4,4,4m0-6c1.1,0,2,.9,2,2s-.9,2-2,2-2-.9-2-2,.9-2,2-2M9,12c2.21,0,4-1.79,4-4s-1.79-4-4-4-4,1.79-4,4,1.79,4,4,4m0-6c1.1,0,2,.9,2,2s-.9,2-2,2-2-.9-2-2,.9-2,2-2M9,14c-2.67,0-8,1.34-8,4v2H17v-2c0-2.66-5.33-4-8-4m1.14-2C10.59,11.83,11,11.44,11,11c0-2.21-1.79-4-4-4S3,8.79,3,11c0,.44,.41,.83,.86,1H3c-2.67,0-8,1.34-8,4v2H11v-2c0-1.43,1.47-2.64,3.5-3.41l-1.36-.68Z"/></svg> Collaboration</li>
+                            <li class="skill-item"><svg class="skill-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20,2H4A2,2,0,0,0,2,4V22l4-4H20a2,2,0,0,0,2-2V4A2,2,0,0,0,20,2Z"/></svg> Communication</li>
+                        </ul>
+                    </div>
+
                  </div>
             </div>
         </section>
         
-        <!-- === FIXED: Projects Section === -->
+        <!-- Projects Section -->
         <section id="projects" class="slideshow-section p-6 md:p-12 relative">
              <div class="is-visible w-full h-full flex flex-col items-center justify-center">
                  <h2 class="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-8 fade-in-section">My Projects</h2>
                  <div class="projects-carousel-container fade-in-section">
                      <div class="projects-carousel-track">
                          <!-- Project Tile 1 -->
-                         <div class="project-tile card-hover-effect content-box-style" data-project-id="1">
+                         <div class="project-tile card-hover-effect" data-project-id="1">
                              <img src="Project1.png" alt="Project 1" class="rounded-t-lg w-full h-48 object-cover">
                              <div class="p-4">
                                  <h3 class="text-xl font-bold text-[var(--color-accent)]">🌎 Deep Earth Sentinel</h3>
@@ -394,7 +371,7 @@
                              </div>
                          </div>
                          <!-- Project Tile 2 -->
-                         <div class="project-tile card-hover-effect content-box-style" data-project-id="2">
+                         <div class="project-tile card-hover-effect" data-project-id="2">
                              <img src="Project2.png" alt="Project 2" class="rounded-t-lg w-full h-48 object-cover">
                              <div class="p-4">
                                  <h3 class="text-xl font-bold text-[var(--color-accent)]">Predicting Customer Churn</h3>
@@ -402,15 +379,13 @@
                              </div>
                          </div>
                          <!-- Project Tile 3 -->
-                         <div class="project-tile card-hover-effect content-box-style" data-project-id="3">
+                         <div class="project-tile card-hover-effect" data-project-id="3">
                              <img src="Project3.png" alt="Project 3" class="rounded-t-lg w-full h-48 object-cover">
                              <div class="p-4">
-                                 <h3 class="text-xl font-bold text-[var(--color-accent)]">
-Human Disease Prediction</h3>
+                                 <h3 class="text-xl font-bold text-[var(--color-accent)]">Human Disease Prediction</h3>
                                  <p class="mt-2 text-sm text-[var(--color-main-text)]">A robust ML DL model designed for the accurate prediction of human diseases</p>
                              </div>
                          </div>
-
                      </div>
                      <button class="carousel-nav-button left">&lt;</button>
                      <button class="carousel-nav-button right">&gt;</button>
@@ -418,7 +393,7 @@ Human Disease Prediction</h3>
             </div>
         </section>
 
-        <!-- === FIXED: Contact Section === -->
+        <!-- Contact Section -->
         <section id="contact" class="slideshow-section p-6 md:p-12">
              <div class="is-visible w-full h-full flex flex-col items-center justify-center max-w-2xl mx-auto px-4 text-center">
                 <h2 class="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 fade-in-section">Get in Touch</h2>
@@ -431,18 +406,13 @@ Human Disease Prediction</h3>
                     </a>
                 </div>
                 <div class="flex justify-center space-x-6 mt-10 fade-in-section">
-                    <a href="#" class="text-[var(--color-main-text)] hover:text-[var(--color-accent)] transition-colors duration-300">
-                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.286 2.55 7.94 6.06 9.385.44.082.6-.192.6-.427V18.73c-2.43.528-2.94-1.17-2.94-1.17-.4-.993-1-1.27-1-1.27-.8-.546.06-.535.06-.535.88.062 1.35.903 1.35.903.78 1.336 2.04 1.026 2.54.784.08-.61.3-1.025.55-1.26-1.94-.22-3.98-.97-3.98-4.32 0-.954.34-1.734.9-2.34-.09-.22-.39-1.11.08-2.31 0 0 .73-.235 2.4 1.435a8.4 8.4 0 012.2-.298c.75.002 1.5.1 2.2.298 1.66-1.67 2.39-1.435 2.39-1.435.48 1.2.18 2.09.09 2.31.56.606.9 1.386.9 2.34 0 3.36-2.04 4.1-3.99 4.31.31.268.58.798.58 1.61v2.38c0 .237.16.51.6.426A10.007 10.007 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"/></svg>
-                    </a>
-                    <a href="#" class="text-[var(--color-main-text)] hover:text-[var(--color-accent)] transition-colors duration-300">
-                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.22 3.88a10.45 10.45 0 00-4.06-2.9 10.12 10.12 0 00-5.16 0A10.45 10.45 0 007.94.98a10.12 10.12 0 00-5.16 0 10.5 10.5 0 00-2.6 1.15c-.2.1-.2.3-.1.5l1.85 4.75c.1.2.3.3.5.2a8.55 8.55 0 014.61-1.85 9.15 9.15 0 014.28 0 8.55 8.55 0 014.61 1.85c.2.1.4 0 .5-.2l1.85-4.75c.1-.2 0-.4-.1-.5zm-4.3 6.42a1.47 1.47 0 11-1.47-1.47 1.47 1.47 0 011.47 1.47zm-8.88 0a1.47 1.47 0 11-1.47-1.47 1.47 1.47 0 011.47 1.47zm13.12 4.19a10.53 10.53 0 01-2.12 7.22 1.25 1.25 0 01-1.07.69H5.21a1.25 1.25 0 01-1.07-.69 10.53 10.53 0 01-2.12-7.22c.02-.18.15-.31.32-.31h18.5a.32.32 0 01.32.31z"/></svg>
-                    </a>
+                    <a href="#" class="text-[var(--color-main-text)] hover:text-[var(--color-accent)] transition-colors duration-300"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.286 2.55 7.94 6.06 9.385.44.082.6-.192.6-.427V18.73c-2.43.528-2.94-1.17-2.94-1.17-.4-.993-1-1.27-1-1.27-.8-.546.06-.535.06-.535.88.062 1.35.903 1.35.903.78 1.336 2.04 1.026 2.54.784.08-.61.3-1.025.55-1.26-1.94-.22-3.98-.97-3.98-4.32 0-.954.34-1.734.9-2.34-.09-.22-.39-1.11.08-2.31 0 0 .73-.235 2.4 1.435a8.4 8.4 0 012.2-.298c.75.002 1.5.1 2.2.298 1.66-1.67 2.39-1.435 2.39-1.435.48 1.2.18 2.09.09 2.31.56.606.9 1.386.9 2.34 0 3.36-2.04 4.1-3.99 4.31.31.268.58.798.58 1.61v2.38c0 .237.16.51.6.426A10.007 10.007 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"/></svg></a>
+                    <a href="#" class="text-[var(--color-main-text)] hover:text-[var(--color-accent)] transition-colors duration-300"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M21.22 3.88a10.45 10.45 0 00-4.06-2.9 10.12 10.12 0 00-5.16 0A10.45 10.45 0 007.94.98a10.12 10.12 0 00-5.16 0 10.5 10.5 0 00-2.6 1.15c-.2.1-.2.3-.1.5l1.85 4.75c.1.2.3.3.5.2a8.55 8.55 0 014.61-1.85 9.15 9.15 0 014.28 0 8.55 8.55 0 014.61 1.85c.2.1.4 0 .5-.2l1.85-4.75c.1-.2 0-.4-.1-.5zm-4.3 6.42a1.47 1.47 0 11-1.47-1.47 1.47 1.47 0 011.47 1.47zm-8.88 0a1.47 1.47 0 11-1.47-1.47 1.47 1.47 0 011.47 1.47zm13.12 4.19a10.53 10.53 0 01-2.12 7.22 1.25 1.25 0 01-1.07.69H5.21a1.25 1.25 0 01-1.07-.69 10.53 10.53 0 01-2.12-7.22c.02-.18.15-.31.32-.31h18.5a.32.32 0 01.32.31z"/></svg></a>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- === FIXED: Project Details Modal === -->
     <div class="project-modal-overlay" id="projectModal">
          <div class="project-modal-content">
              <button class="project-modal-close-button">&times;</button>
@@ -453,9 +423,7 @@ Human Disease Prediction</h3>
                  <h3 id="modalProjectTitle" class="text-2xl font-bold text-[var(--color-accent)] mb-2">Project Title</h3>
                  <p id="modalProjectDescription" class="text-[var(--color-main-text)] mb-4">Detailed project description goes here.</p>
                  <h4 class="text-lg font-semibold text-[var(--color-accent)] mb-2">Technologies Used:</h4>
-                 <div id="modalProjectSkills" class="flex flex-wrap gap-2">
-                     <!-- Skills will be populated by JS -->
-                 </div>
+                 <div id="modalProjectSkills" class="flex flex-wrap gap-2"></div>
                  <div class="mt-6">
                     <a id="modalProjectLink" href="#" target="_blank" class="inline-block bg-[var(--color-accent)] text-[var(--color-primary-bg)] font-semibold py-2 px-4 rounded-lg hover:bg-opacity-80 transition-colors duration-300 btn-glow">View Project</a>
                  </div>
@@ -465,294 +433,239 @@ Human Disease Prediction</h3>
 
 
     <script>
-        // --- START: PARTICLE ANIMATION SCRIPT ---
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let mouse = { x: null, y: null, radius: 100 };
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- PARTICLE ANIMATION SCRIPT ---
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let mouse = { x: null, y: null, radius: 100 };
 
-        function setupCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            particles = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 9000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * .4) - .2;
-                let directionY = (Math.random() * .4) - .2;
-                let color = 'rgba(52, 211, 153, 0.5)'; // Accent color with alpha
-                particles.push({ x, y, directionX, directionY, size, color });
+            function setupCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                particles = [];
+                let numberOfParticles = (canvas.height * canvas.width) / 9000;
+                for (let i = 0; i < numberOfParticles; i++) {
+                    let size = (Math.random() * 2) + 1;
+                    let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                    let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                    let directionX = (Math.random() * .4) - .2;
+                    let directionY = (Math.random() * .4) - .2;
+                    let color = 'rgba(52, 211, 153, 0.5)';
+                    particles.push({ x, y, directionX, directionY, size, color });
+                }
             }
-        }
 
-        function drawParticles() {
-            particles.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = p.color;
-                ctx.fill();
-            });
-        }
+            function drawParticles() {
+                particles.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2, false);
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                });
+            }
 
-        function connectParticles() {
-            let opacityValue = 1;
-            for (let a = 0; a < particles.length; a++) {
-                for (let b = a; b < particles.length; b++) {
-                    let distance = ((particles[a].x - particles[b].x) * (particles[a].x - particles[b].x)) +
-                                 ((particles[a].y - particles[b].y) * (particles[a].y - particles[b].y));
-                    if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-                        opacityValue = 1 - (distance / 20000);
-                        ctx.strokeStyle = `rgba(229, 231, 235, ${opacityValue})`; // Main text color with alpha
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[a].x, particles[a].y);
-                        ctx.lineTo(particles[b].x, particles[b].y);
-                        ctx.stroke();
+            function connectParticles() {
+                let opacityValue = 1;
+                for (let a = 0; a < particles.length; a++) {
+                    for (let b = a; b < particles.length; b++) {
+                        let distance = ((particles[a].x - particles[b].x) * (particles[a].x - particles[b].x)) +
+                                     ((particles[a].y - particles[b].y) * (particles[a].y - particles[b].y));
+                        if (distance < (canvas.width / 7) * (canvas.height / 7)) {
+                            opacityValue = 1 - (distance / 20000);
+                            ctx.strokeStyle = `rgba(229, 231, 235, ${opacityValue})`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[a].x, particles[a].y);
+                            ctx.lineTo(particles[b].x, particles[b].y);
+                            ctx.stroke();
+                        }
                     }
                 }
             }
-        }
 
-        function updateParticles() {
-            particles.forEach(p => {
-                if (p.x + p.size > canvas.width || p.x - p.size < 0) { p.directionX = -p.directionX; }
-                if (p.y + p.size > canvas.height || p.y - p.size < 0) { p.directionY = -p.directionY; }
-                let dx = mouse.x - p.x;
-                let dy = mouse.y - p.y;
-                let distance = Math.sqrt(dx*dx + dy*dy);
-                if (distance < mouse.radius + p.size){
-                    if(mouse.x < p.x && p.x < canvas.width - p.size * 10) { p.x += 3; }
-                    if(mouse.x > p.x && p.x > p.size * 10) { p.x -= 3; }
-                    if(mouse.y < p.y && p.y < canvas.height - p.size * 10) { p.y += 3; }
-                    if(mouse.y > p.y && p.y > p.size * 10) { p.y -= 3; }
-                }
-                p.x += p.directionX;
-                p.y += p.directionY;
-            });
-        }
-        
-        function animate() {
-            requestAnimationFrame(animate);
-            ctx.clearRect(0, 0, innerWidth, innerHeight);
-            drawParticles();
-            connectParticles();
-            updateParticles();
-        }
-
-        window.addEventListener('resize', setupCanvas);
-        window.addEventListener('mousemove', (event) => { mouse.x = event.x; mouse.y = event.y; });
-        window.addEventListener('mouseout', () => { mouse.x = undefined; mouse.y = undefined; });
-
-        // --- END: PARTICLE ANIMATION SCRIPT ---
-
-
-        // --- START: PAGE NAVIGATION SCRIPT ---
-        const sections = document.querySelectorAll('.slideshow-section');
-        let currentSectionIndex = 0;
-        let isThrottled = false;
-        let loader, transitionCoverTop, transitionCoverBottom;
-
-        function animateContentIn(section) {
-            section.classList.add('is-visible');
-            if (section.id === 'hero') { section.classList.add('active-content'); }
-        }
-        
-        function resetContentAnimations(section) {
-            section.classList.remove('is-visible');
-            if (section.id === 'hero') { section.classList.remove('active-content'); }
-        }
-
-        function goToSection(newIndex) {
-            if (isThrottled || newIndex === currentSectionIndex || newIndex < 0 || newIndex >= sections.length) return;
+            function updateParticles() {
+                particles.forEach(p => {
+                    if (p.x + p.size > canvas.width || p.x - p.size < 0) { p.directionX = -p.directionX; }
+                    if (p.y + p.size > canvas.height || p.y - p.size < 0) { p.directionY = -p.directionY; }
+                    let dx = mouse.x - p.x;
+                    let dy = mouse.y - p.y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+                    if (distance < mouse.radius + p.size){
+                        if(mouse.x < p.x && p.x < canvas.width - p.size * 10) { p.x += 3; }
+                        if(mouse.x > p.x && p.x > p.size * 10) { p.x -= 3; }
+                        if(mouse.y < p.y && p.y < canvas.height - p.size * 10) { p.y += 3; }
+                        if(mouse.y > p.y && p.y > p.size * 10) { p.y -= 3; }
+                    }
+                    p.x += p.directionX;
+                    p.y += p.directionY;
+                });
+            }
             
-            isThrottled = true;
-            const prevSection = sections[currentSectionIndex];
-            const newSection = sections[newIndex];
+            function animate() {
+                requestAnimationFrame(animate);
+                ctx.clearRect(0, 0, innerWidth, innerHeight);
+                drawParticles();
+                connectParticles();
+                updateParticles();
+            }
 
-            resetContentAnimations(prevSection);
+            window.addEventListener('resize', setupCanvas);
+            window.addEventListener('mousemove', (event) => { mouse.x = event.x; mouse.y = event.y; });
+            window.addEventListener('mouseout', () => { mouse.x = undefined; mouse.y = undefined; });
+
+            // --- PAGE NAVIGATION SCRIPT ---
+            const sections = document.querySelectorAll('.slideshow-section');
+            const transitionOverlay = document.getElementById('transition-overlay');
+            let currentSectionIndex = 0;
+            let isThrottled = false;
+
+            function animateContentIn(section) {
+                section.classList.add('is-visible');
+                if (section.id === 'hero') { section.classList.add('active-content'); }
+            }
             
-            const tl = new TimelineMax({
-                onComplete: () => {
-                    isThrottled = false;
-                    animateContentIn(newSection);
-                }
+            function resetContentAnimations(section) {
+                section.classList.remove('is-visible', 'active-content');
+            }
+
+            function goToSection(newIndex) {
+                if (isThrottled || newIndex === currentSectionIndex || newIndex < 0 || newIndex >= sections.length) return;
+                
+                isThrottled = true;
+                const prevSection = sections[currentSectionIndex];
+                const newSection = sections[newIndex];
+
+                gsap.timeline({
+                    onComplete: () => { isThrottled = false; }
+                })
+                .to(transitionOverlay, { autoAlpha: 1, duration: 0.4, ease: "power2.in" })
+                .call(() => {
+                    resetContentAnimations(prevSection);
+                    prevSection.classList.remove('active');
+                    newSection.classList.add('active');
+                    currentSectionIndex = newIndex;
+                    updateNavDots();
+                })
+                .call(() => {
+                     animateContentIn(newSection);
+                }, null, "+=0.1")
+                .to(transitionOverlay, { autoAlpha: 0, duration: 0.4, ease: "power2.out", delay: 0.2 });
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (document.querySelector('.project-modal-overlay.open')) return;
+                if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goToSection(currentSectionIndex + 1);
+                else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') goToSection(currentSectionIndex - 1);
             });
 
-            tl.to([transitionCoverTop, transitionCoverBottom], 0.4, { y: '0%', ease: Power2.easeIn, autoAlpha: 1 })
-              .to(loader, 0.2, { autoAlpha: 1 })
-              .call(() => {
-                  prevSection.classList.remove('active');
-                  newSection.classList.add('active');
-                  currentSectionIndex = newIndex;
-                  updateNavDots();
-              })
-              .to(loader, 0.2, { autoAlpha: 0, delay: 0.5 })
-              .to([transitionCoverTop, transitionCoverBottom], 0.4, { y: (i) => i === 0 ? '-100%' : '100%', ease: Power2.easeOut, autoAlpha: 0 });
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowDown') goToSection(currentSectionIndex + 1);
-            else if (e.key === 'ArrowUp') goToSection(currentSectionIndex - 1);
-        });
-
-        let wheelTimeout;
-        document.addEventListener('wheel', (e) => {
-            if (isThrottled) return;
-            if (document.querySelector('.project-modal-overlay.open')) return;
-            e.preventDefault();
-            clearTimeout(wheelTimeout);
-            wheelTimeout = setTimeout(() => {
+            document.addEventListener('wheel', (e) => {
+                if (isThrottled || document.querySelector('.project-modal-overlay.open')) return;
+                e.preventDefault();
                 if (e.deltaY > 0) goToSection(currentSectionIndex + 1);
                 else goToSection(currentSectionIndex - 1);
-            }, 50);
-        }, { passive: false });
+            }, { passive: false });
 
-        document.getElementById('mobile-menu-button').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
-
-        const navDotsContainer = document.createElement('div');
-        navDotsContainer.className = 'nav-dots';
-        document.body.appendChild(navDotsContainer);
-
-        sections.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.className = 'nav-dot';
-            dot.dataset.sectionIndex = index;
-            dot.addEventListener('click', () => goToSection(index));
-            navDotsContainer.appendChild(dot);
-        });
-
-        function updateNavDots() {
-            document.querySelectorAll('.nav-dot').forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentSectionIndex);
+            document.getElementById('mobile-menu-button').addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
             });
-        }
-        
-        document.querySelectorAll('header nav a, #mobile-menu a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const index = parseInt(this.dataset.sectionIndex);
-                if (!isNaN(index)) {
-                     goToSection(index);
-                     if(!document.getElementById('mobile-menu').classList.contains('hidden')) {
-                        document.getElementById('mobile-menu').classList.add('hidden');
-                     }
-                }
+
+            const navDotsContainer = document.createElement('div');
+            navDotsContainer.className = 'nav-dots';
+            document.body.appendChild(navDotsContainer);
+
+            sections.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'nav-dot';
+                dot.dataset.sectionIndex = index;
+                dot.addEventListener('click', () => goToSection(index));
+                navDotsContainer.appendChild(dot);
             });
-        });
 
-        // --- END: PAGE NAVIGATION SCRIPT ---
-
-
-        // --- START: PROJECTS CAROUSEL & MODAL SCRIPT ---
-        const projectData = {
-            "1": {
-                title: "🌎 Deep Earth Sentinel: AI-Powered Microplastic Pollution Source Identification",
-                description: "Deep Earth Sentinel is a deep learning-driven initiative aimed at combating microplastic pollution by accurately identifying the geographical origin of plastic bottle waste. This project develops and deploys a robust Artificial Intelligence model that predicts the scan_country (country of origin) of a plastic bottle based on its product attributes. By precisely pinpointing the source, environmental agencies and policymakers can implement targeted strategies to reduce plastic waste at its origin.",
-                image: "Project1.png",
-                skills: ["TensorFlow", "Python", "NLP", "Machine Learning", "Streamlit"],
-                link: "https://github.com/MrDunky14/Plastic-Source-Identification-using-DL"
-            },
-            "2": {
-                title: "Predicting Customer Churn: An Advanced Machine Learning",
-                description: "This project presents a comprehensive analysis and predictive modeling solution for customer churn in a telecommunications context. Leveraging a detailed dataset, the primary objective is to accurately identify customers at high risk of churning, understand the underlying drivers of churn, and provide actionable business recommendations to enhance customer retention and maximize Customer Lifetime Value (CLTV).",
-                image: "Project2.png",
-                skills: ["Sklearn", "Machine Learning", "Python", "Data Science", "Pandas"],
-                link: "https://github.com/MrDunky14/Predicting-Customer-Churn-An-Advanced-Machine-Learning"
-            },
-            "3": {
-                title: "Human Disease Prediction Model",
-                description: "This project presents a robust machine learning model designed for the accurate prediction of human diseases based solely on patient-reported symptoms. Leveraging a comprehensive dataset, this model aims to provide a valuable tool for early diagnosis assistance, potentially streamlining the diagnostic process and improving patient outcomes in healthcare settings.",
-                image: "Project3.png",
-                skills: ["cuML", "Transformers", "Model Interpretion", "Machine Learning"],
-                link: "https://github.com/MrDunky14/Human-Disease-Prediction-Model"
-            },
-        };
-
-        const carouselTrack = document.querySelector('.projects-carousel-track');
-        const prevButton = document.querySelector('.carousel-nav-button.left');
-        const nextButton = document.querySelector('.carousel-nav-button.right');
-        const projectTiles = document.querySelectorAll('.project-tile');
-        let currentIndex = 0;
-
-        function updateCarousel() {
-            const tileWidth = projectTiles[0].offsetWidth + 20; // 20 is margin-right
-            carouselTrack.style.transform = `translateX(-${currentIndex * tileWidth}px)`;
-        }
-
-        nextButton.addEventListener('click', () => {
-            if (currentIndex < projectTiles.length - 1) {
-                currentIndex++;
-                updateCarousel();
-            }
-        });
-
-        prevButton.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateCarousel();
-            }
-        });
-        
-        const modal = document.getElementById('projectModal');
-        const closeModalButton = document.querySelector('.project-modal-close-button');
-
-        projectTiles.forEach(tile => {
-            tile.addEventListener('click', () => {
-                const projectId = tile.dataset.projectId;
-                const data = projectData[projectId];
-                
-                document.getElementById('modalProjectTitle').textContent = data.title;
-                document.getElementById('modalProjectDescription').textContent = data.description;
-                document.getElementById('modalProjectImage').src = data.image;
-                document.getElementById('modalProjectLink').href = data.link;
-
-                const skillsContainer = document.getElementById('modalProjectSkills');
-                skillsContainer.innerHTML = '';
-                data.skills.forEach(skill => {
-                    const skillTag = document.createElement('span');
-                    skillTag.className = 'bg-[var(--color-secondary-bg)] text-[var(--color-accent)] text-sm font-medium px-3 py-1 rounded-full';
-                    skillTag.textContent = skill;
-                    skillsContainer.appendChild(skillTag);
+            function updateNavDots() {
+                document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSectionIndex);
                 });
-
-                modal.classList.add('open');
-                document.body.classList.add('no-scroll');
-            });
-        });
-
-        function closeModal() {
-            modal.classList.remove('open');
-            document.body.classList.remove('no-scroll');
-        }
-
-        closeModalButton.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
             }
-        });
-        // --- END: PROJECTS CAROUSEL & MODAL SCRIPT ---
-        
-        
-        // Final Initialization on Load
-        window.onload = () => {
-            loader = document.querySelector('.loader');
-            transitionCoverTop = document.querySelector('.transition-cover-top');
-            transitionCoverBottom = document.querySelector('.transition-cover-bottom');
             
-            // Initialize first section
+            document.querySelectorAll('header nav a, #mobile-menu a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const index = parseInt(this.dataset.sectionIndex);
+                    if (!isNaN(index)) {
+                         goToSection(index);
+                         if(!document.getElementById('mobile-menu').classList.contains('hidden')) {
+                            document.getElementById('mobile-menu').classList.add('hidden');
+                         }
+                    }
+                });
+            });
+
+            // --- PROJECTS CAROUSEL & MODAL SCRIPT ---
+            const projectData = {
+                "1": { title: "🌎 Deep Earth Sentinel: AI-Powered Microplastic Pollution Source Identification", description: "Deep Earth Sentinel is a deep learning-driven initiative aimed at combating microplastic pollution by accurately identifying the geographical origin of plastic bottle waste...", image: "Project1.png", skills: ["TensorFlow", "Python", "NLP", "Machine Learning", "Streamlit"], link: "https://github.com/MrDunky14/Plastic-Source-Identification-using-DL" },
+                "2": { title: "Predicting Customer Churn: An Advanced Machine Learning", description: "This project presents a comprehensive analysis and predictive modeling solution for customer churn in a telecommunications context...", image: "Project2.png", skills: ["Sklearn", "Machine Learning", "Python", "Data Science", "Pandas"], link: "https://github.com/MrDunky14/Predicting-Customer-Churn-An-Advanced-Machine-Learning" },
+                "3": { title: "Human Disease Prediction Model", description: "This project presents a robust machine learning model designed for the accurate prediction of human diseases based solely on patient-reported symptoms...", image: "Project3.png", skills: ["cuML", "Transformers", "Model Interpretion", "Machine Learning"], link: "https://github.com/MrDunky14/Human-Disease-Prediction-Model" },
+            };
+            const carouselTrack = document.querySelector('.projects-carousel-track');
+            const prevButton = document.querySelector('.carousel-nav-button.left');
+            const nextButton = document.querySelector('.carousel-nav-button.right');
+            const projectTiles = document.querySelectorAll('.project-tile');
+            let currentIndex = 0;
+
+            function updateCarousel() {
+                const tileWidth = projectTiles[0].offsetWidth + 20;
+                const maxIndex = projectTiles.length - Math.floor(carouselTrack.parentElement.offsetWidth / tileWidth);
+                if (currentIndex > maxIndex) currentIndex = maxIndex;
+                if (currentIndex < 0) currentIndex = 0;
+                carouselTrack.style.transform = `translateX(-${currentIndex * tileWidth}px)`;
+            }
+
+            nextButton.addEventListener('click', () => { currentIndex++; updateCarousel(); });
+            prevButton.addEventListener('click', () => { currentIndex--; updateCarousel(); });
+            window.addEventListener('resize', updateCarousel);
+            
+            const modal = document.getElementById('projectModal');
+            projectTiles.forEach(tile => {
+                tile.addEventListener('click', () => {
+                    const projectId = tile.dataset.projectId;
+                    const data = projectData[projectId];
+                    
+                    document.getElementById('modalProjectTitle').textContent = data.title;
+                    document.getElementById('modalProjectDescription').textContent = data.description;
+                    document.getElementById('modalProjectImage').src = data.image;
+                    document.getElementById('modalProjectLink').href = data.link;
+
+                    const skillsContainer = document.getElementById('modalProjectSkills');
+                    skillsContainer.innerHTML = '';
+                    data.skills.forEach(skill => {
+                        const skillTag = document.createElement('span');
+                        skillTag.className = 'bg-[var(--color-card-bg)] text-[var(--color-accent)] text-sm font-medium px-3 py-1 rounded-full';
+                        skillTag.textContent = skill;
+                        skillsContainer.appendChild(skillTag);
+                    });
+
+                    modal.classList.add('open');
+                    document.body.classList.add('no-scroll');
+                });
+            });
+
+            function closeModal() {
+                modal.classList.remove('open');
+                document.body.classList.remove('no-scroll');
+            }
+
+            document.querySelector('.project-modal-close-button').addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+            
+            // --- INITIALIZATION ---
             sections[0].classList.add('active');
             animateContentIn(sections[0]);
             updateNavDots();
-
-            // Initialize canvas animation
             setupCanvas();
             animate();
-        };
+            updateCarousel();
+        });
     </script>
 </body>
 </html>
