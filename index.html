@@ -47,7 +47,7 @@
             overflow: hidden;
         }
 
-        /* --- NEW: Simplified page transition overlay --- */
+        /* --- Page transition overlay --- */
         #transition-overlay {
             position: fixed;
             top: 0;
@@ -115,14 +115,30 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
+            /* Responsive padding */
             padding-top: 6rem;
             padding-bottom: 2rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
             box-sizing: border-box;
             transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
             overflow-y: auto;
             overflow-x: hidden;
             z-index: 10;
         }
+        @media (min-width: 640px) {
+            .slideshow-section {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+        @media (min-width: 1024px) {
+            .slideshow-section {
+                padding-left: 3rem;
+                padding-right: 3rem;
+            }
+        }
+
         .slideshow-section.active { opacity: 1; visibility: visible; }
         
         header {
@@ -192,7 +208,7 @@
             .project-modal-content { flex-direction: row; max-width: 80%; max-height: 80%; padding: 2rem; gap: 1.5rem; }
         }
 
-        /* --- NEW: Skills Section Styles --- */
+        /* --- Skills Section Styles --- */
         .skill-item {
             display: flex;
             align-items: center;
@@ -246,7 +262,7 @@
 
     <main class="w-full h-full relative">
         <!-- Hero Section -->
-        <section id="hero" class="slideshow-section text-white p-6 md:p-16 flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12">
+        <section id="hero" class="slideshow-section text-white flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12">
             <div class="flex-shrink-0 hero-animation-img z-10">
                 <img src="image.png" alt="Profile Picture of Krishna Singh" class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full border-4 border-[var(--color-accent)] shadow-lg object-cover">
             </div>
@@ -264,7 +280,7 @@
         </section>
 
         <!-- About Me Section -->
-        <section id="about" class="slideshow-section p-6 md:p-12">
+        <section id="about" class="slideshow-section">
             <div class="is-visible w-full h-full flex flex-col items-center justify-center">
                 <div class="content-container p-6 md:p-10">
                     <div class="about-title-wrapper fade-in-section">
@@ -286,11 +302,13 @@
             </div>
         </section>
         
-        <!-- === NEW: Skills Section === -->
-        <section id="skills" class="slideshow-section p-4 sm:p-6 md:p-12">
-            <div class="is-visible w-full h-full flex flex-col items-center justify-center max-w-6xl mx-auto px-4">
-                 <h2 class="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-10 text-center fade-in-section">Technical Proficiency</h2>
-                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full">
+        <!-- === Skills Section === -->
+        <section id="skills" class="slideshow-section">
+            <div class="is-visible w-full h-full flex flex-col items-center justify-center max-w-6xl mx-auto">
+                 <!-- Responsive margin for title -->
+                 <h2 class="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-6 md:mb-10 text-center fade-in-section">Technical Proficiency</h2>
+                 <!-- Responsive gap for grid -->
+                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 w-full">
                     
                     <!-- Languages & Databases -->
                     <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
@@ -357,14 +375,15 @@
         </section>
         
         <!-- Projects Section -->
-        <section id="projects" class="slideshow-section p-6 md:p-12 relative">
+        <section id="projects" class="slideshow-section relative">
              <div class="is-visible w-full h-full flex flex-col items-center justify-center">
                  <h2 class="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-8 fade-in-section">My Projects</h2>
                  <div class="projects-carousel-container fade-in-section">
                      <div class="projects-carousel-track">
                          <!-- Project Tile 1 -->
                          <div class="project-tile card-hover-effect" data-project-id="1">
-                             <img src="Project1.png" alt="Project 1" class="rounded-t-lg w-full h-48 object-cover">
+                             <!-- Optimization: Added lazy loading -->
+                             <img src="Project1.png" alt="Project 1" loading="lazy" class="rounded-t-lg w-full h-48 object-cover">
                              <div class="p-4">
                                  <h3 class="text-xl font-bold text-[var(--color-accent)]">🌎 Deep Earth Sentinel</h3>
                                  <p class="mt-2 text-sm text-[var(--color-main-text)]">A neural network for plastic waste source classification.</p>
@@ -372,7 +391,8 @@
                          </div>
                          <!-- Project Tile 2 -->
                          <div class="project-tile card-hover-effect" data-project-id="2">
-                             <img src="Project2.png" alt="Project 2" class="rounded-t-lg w-full h-48 object-cover">
+                             <!-- Optimization: Added lazy loading -->
+                             <img src="Project2.png" alt="Project 2" loading="lazy" class="rounded-t-lg w-full h-48 object-cover">
                              <div class="p-4">
                                  <h3 class="text-xl font-bold text-[var(--color-accent)]">Predicting Customer Churn</h3>
                                  <p class="mt-2 text-sm text-[var(--color-main-text)]">A comprehensive analysis and predictive modeling solution for customer churn</p>
@@ -380,7 +400,8 @@
                          </div>
                          <!-- Project Tile 3 -->
                          <div class="project-tile card-hover-effect" data-project-id="3">
-                             <img src="Project3.png" alt="Project 3" class="rounded-t-lg w-full h-48 object-cover">
+                             <!-- Optimization: Added lazy loading -->
+                             <img src="Project3.png" alt="Project 3" loading="lazy" class="rounded-t-lg w-full h-48 object-cover">
                              <div class="p-4">
                                  <h3 class="text-xl font-bold text-[var(--color-accent)]">Human Disease Prediction</h3>
                                  <p class="mt-2 text-sm text-[var(--color-main-text)]">A robust ML DL model designed for the accurate prediction of human diseases</p>
@@ -394,8 +415,8 @@
         </section>
 
         <!-- Contact Section -->
-        <section id="contact" class="slideshow-section p-6 md:p-12">
-             <div class="is-visible w-full h-full flex flex-col items-center justify-center max-w-2xl mx-auto px-4 text-center">
+        <section id="contact" class="slideshow-section">
+             <div class="is-visible w-full h-full flex flex-col items-center justify-center max-w-2xl mx-auto text-center">
                 <h2 class="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 fade-in-section">Get in Touch</h2>
                 <p class="text-lg mb-8 text-[var(--color-main-text)] opacity-90 fade-in-section">
                     I'm always open to discussing new projects, creative ideas, or opportunities to be part of an innovative team. Feel free to reach out to me.
@@ -444,7 +465,9 @@
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
                 particles = [];
-                let numberOfParticles = (canvas.height * canvas.width) / 9000;
+                // Optimization: Reduce particle count on smaller screens for better performance.
+                const particleDensity = window.innerWidth < 768 ? 20000 : 9000;
+                let numberOfParticles = (canvas.height * canvas.width) / particleDensity;
                 for (let i = 0; i < numberOfParticles; i++) {
                     let size = (Math.random() * 2) + 1;
                     let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
@@ -466,13 +489,15 @@
             }
 
             function connectParticles() {
+                // Optimization: Use a squared distance for performance and adjust for screen size.
+                const connectDistance = window.innerWidth < 768 ? (120 * 120) : (150 * 150);
                 let opacityValue = 1;
                 for (let a = 0; a < particles.length; a++) {
                     for (let b = a; b < particles.length; b++) {
                         let distance = ((particles[a].x - particles[b].x) * (particles[a].x - particles[b].x)) +
                                      ((particles[a].y - particles[b].y) * (particles[a].y - particles[b].y));
-                        if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-                            opacityValue = 1 - (distance / 20000);
+                        if (distance < connectDistance) {
+                            opacityValue = 1 - (distance / connectDistance);
                             ctx.strokeStyle = `rgba(229, 231, 235, ${opacityValue})`;
                             ctx.lineWidth = 1;
                             ctx.beginPath();
