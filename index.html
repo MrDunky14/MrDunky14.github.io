@@ -273,8 +273,10 @@
                     Driving innovation through intelligent systems. I specialize in Machine Learning, Deep Learning, and Data Science, transforming complex data into actionable insights to solve real-world challenges.
                 </p>
                 <div class="mt-8 flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 hero-animation-buttons">
-                    <a href="#" onclick="goToSection(3); return false;" class="bg-[var(--color-accent)] text-[var(--color-primary-bg)] font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-opacity-80 transition-all duration-300 transform hover:scale-105 btn-glow">View Projects</a>
-                    <a href="#" onclick="goToSection(4); return false;" class="bg-transparent text-[var(--color-accent)] font-semibold py-3 px-6 rounded-lg border border-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-primary-bg)] transition-all duration-300 transform hover:scale-105 btn-glow">Get in Touch</a>
+                    <!-- FIX: Removed inline onclick and added ID for event listener -->
+                    <a href="#" id="view-projects-btn" class="bg-[var(--color-accent)] text-[var(--color-primary-bg)] font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-opacity-80 transition-all duration-300 transform hover:scale-105 btn-glow">View Projects</a>
+                    <!-- FIX: Removed inline onclick and added ID for event listener -->
+                    <a href="#" id="get-in-touch-btn" class="bg-transparent text-[var(--color-accent)] font-semibold py-3 px-6 rounded-lg border border-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-primary-bg)] transition-all duration-300 transform hover:scale-105 btn-glow">Get in Touch</a>
                 </div>
             </div>
         </section>
@@ -422,13 +424,14 @@
                     I'm always open to discussing new projects, creative ideas, or opportunities to be part of an innovative team. Feel free to reach out to me.
                 </p>
                 <div class="fade-in-section">
-                    <a href="mailto:contact@krishnasingh.ai" class="inline-block bg-[var(--color-accent)] text-[var(--color-primary-bg)] font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-opacity-80 transition-all duration-300 transform hover:scale-105 btn-glow">
+                    <!-- UPDATE: Changed mailto link -->
+                    <a href="mailto:krishnasingh8627@gmail.com" class="inline-block bg-[var(--color-accent)] text-[var(--color-primary-bg)] font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-opacity-80 transition-all duration-300 transform hover:scale-105 btn-glow">
                         Say Hello
                     </a>
                 </div>
                 <div class="flex justify-center space-x-6 mt-10 fade-in-section">
-                    <a href="#" class="text-[var(--color-main-text)] hover:text-[var(--color-accent)] transition-colors duration-300"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.286 2.55 7.94 6.06 9.385.44.082.6-.192.6-.427V18.73c-2.43.528-2.94-1.17-2.94-1.17-.4-.993-1-1.27-1-1.27-.8-.546.06-.535.06-.535.88.062 1.35.903 1.35.903.78 1.336 2.04 1.026 2.54.784.08-.61.3-1.025.55-1.26-1.94-.22-3.98-.97-3.98-4.32 0-.954.34-1.734.9-2.34-.09-.22-.39-1.11.08-2.31 0 0 .73-.235 2.4 1.435a8.4 8.4 0 012.2-.298c.75.002 1.5.1 2.2.298 1.66-1.67 2.39-1.435 2.39-1.435.48 1.2.18 2.09.09 2.31.56.606.9 1.386.9 2.34 0 3.36-2.04 4.1-3.99 4.31.31.268.58.798.58 1.61v2.38c0 .237.16.51.6.426A10.007 10.007 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"/></svg></a>
-                    <a href="#" class="text-[var(--color-main-text)] hover:text-[var(--color-accent)] transition-colors duration-300"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M21.22 3.88a10.45 10.45 0 00-4.06-2.9 10.12 10.12 0 00-5.16 0A10.45 10.45 0 007.94.98a10.12 10.12 0 00-5.16 0 10.5 10.5 0 00-2.6 1.15c-.2.1-.2.3-.1.5l1.85 4.75c.1.2.3.3.5.2a8.55 8.55 0 014.61-1.85 9.15 9.15 0 014.28 0 8.55 8.55 0 014.61 1.85c.2.1.4 0 .5-.2l1.85-4.75c.1-.2 0-.4-.1-.5zm-4.3 6.42a1.47 1.47 0 11-1.47-1.47 1.47 1.47 0 011.47 1.47zm-8.88 0a1.47 1.47 0 11-1.47-1.47 1.47 1.47 0 011.47 1.47zm13.12 4.19a10.53 10.53 0 01-2.12 7.22 1.25 1.25 0 01-1.07.69H5.21a1.25 1.25 0 01-1.07-.69 10.53 10.53 0 01-2.12-7.22c.02-.18.15-.31.32-.31h18.5a.32.32 0 01.32.31z"/></svg></a>
+                    <!-- UPDATE: Changed GitHub link -->
+                    <a href="https://github.com/MrDunky14" target="_blank" rel="noopener noreferrer" class="text-[var(--color-main-text)] hover:text-[var(--color-accent)] transition-colors duration-300"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.286 2.55 7.94 6.06 9.385.44.082.6-.192.6-.427V18.73c-2.43.528-2.94-1.17-2.94-1.17-.4-.993-1-1.27-1-1.27-.8-.546.06-.535.06-.535.88.062 1.35.903 1.35.903.78 1.336 2.04 1.026 2.54.784.08-.61.3-1.025.55-1.26-1.94-.22-3.98-.97-3.98-4.32 0-.954.34-1.734.9-2.34-.09-.22-.39-1.11.08-2.31 0 0 .73-.235 2.4 1.435a8.4 8.4 0 012.2-.298c.75.002 1.5.1 2.2.298 1.66-1.67 2.39-1.435 2.39-1.435.48 1.2.18 2.09.09 2.31.56.606.9 1.386.9 2.34 0 3.36-2.04 4.1-3.99 4.31.31.268.58.798.58 1.61v2.38c0 .237.16.51.6.426A10.007 10.007 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"/></svg></a>
                 </div>
             </div>
         </section>
@@ -455,6 +458,64 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- GLOBAL NAVIGATION FUNCTION ---
+            // This function is defined here to be accessible throughout the script
+            let currentSectionIndex = 0;
+            let isThrottled = false;
+            const sections = document.querySelectorAll('.slideshow-section');
+            const transitionOverlay = document.getElementById('transition-overlay');
+
+            function goToSection(newIndex) {
+                if (isThrottled || newIndex === currentSectionIndex || newIndex < 0 || newIndex >= sections.length) return;
+                
+                isThrottled = true;
+                const prevSection = sections[currentSectionIndex];
+                const newSection = sections[newIndex];
+
+                gsap.timeline({
+                    onComplete: () => { isThrottled = false; }
+                })
+                .to(transitionOverlay, { autoAlpha: 1, duration: 0.4, ease: "power2.in" })
+                .call(() => {
+                    resetContentAnimations(prevSection);
+                    prevSection.classList.remove('active');
+                    newSection.classList.add('active');
+                    currentSectionIndex = newIndex;
+                    updateNavDots();
+                })
+                .call(() => {
+                     animateContentIn(newSection);
+                }, null, "+=0.1")
+                .to(transitionOverlay, { autoAlpha: 0, duration: 0.4, ease: "power2.out", delay: 0.2 });
+            }
+            
+            function animateContentIn(section) {
+                section.classList.add('is-visible');
+                if (section.id === 'hero') { section.classList.add('active-content'); }
+            }
+            
+            function resetContentAnimations(section) {
+                section.classList.remove('is-visible', 'active-content');
+            }
+            
+            function updateNavDots() {
+                document.querySelectorAll('.nav-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSectionIndex);
+                });
+            }
+
+            // --- EVENT LISTENERS SETUP ---
+            
+            // FIX: Added event listeners for Hero buttons
+            document.getElementById('view-projects-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                goToSection(3);
+            });
+            document.getElementById('get-in-touch-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                goToSection(4);
+            });
+
             // --- PARTICLE ANIMATION SCRIPT ---
             const canvas = document.getElementById('particle-canvas');
             const ctx = canvas.getContext('2d');
@@ -465,7 +526,6 @@
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
                 particles = [];
-                // Optimization: Reduce particle count on smaller screens for better performance.
                 const particleDensity = window.innerWidth < 768 ? 20000 : 9000;
                 let numberOfParticles = (canvas.height * canvas.width) / particleDensity;
                 for (let i = 0; i < numberOfParticles; i++) {
@@ -489,7 +549,6 @@
             }
 
             function connectParticles() {
-                // Optimization: Use a squared distance for performance and adjust for screen size.
                 const connectDistance = window.innerWidth < 768 ? (120 * 120) : (150 * 150);
                 let opacityValue = 1;
                 for (let a = 0; a < particles.length; a++) {
@@ -539,45 +598,7 @@
             window.addEventListener('mousemove', (event) => { mouse.x = event.x; mouse.y = event.y; });
             window.addEventListener('mouseout', () => { mouse.x = undefined; mouse.y = undefined; });
 
-            // --- PAGE NAVIGATION SCRIPT ---
-            const sections = document.querySelectorAll('.slideshow-section');
-            const transitionOverlay = document.getElementById('transition-overlay');
-            let currentSectionIndex = 0;
-            let isThrottled = false;
-
-            function animateContentIn(section) {
-                section.classList.add('is-visible');
-                if (section.id === 'hero') { section.classList.add('active-content'); }
-            }
-            
-            function resetContentAnimations(section) {
-                section.classList.remove('is-visible', 'active-content');
-            }
-
-            function goToSection(newIndex) {
-                if (isThrottled || newIndex === currentSectionIndex || newIndex < 0 || newIndex >= sections.length) return;
-                
-                isThrottled = true;
-                const prevSection = sections[currentSectionIndex];
-                const newSection = sections[newIndex];
-
-                gsap.timeline({
-                    onComplete: () => { isThrottled = false; }
-                })
-                .to(transitionOverlay, { autoAlpha: 1, duration: 0.4, ease: "power2.in" })
-                .call(() => {
-                    resetContentAnimations(prevSection);
-                    prevSection.classList.remove('active');
-                    newSection.classList.add('active');
-                    currentSectionIndex = newIndex;
-                    updateNavDots();
-                })
-                .call(() => {
-                     animateContentIn(newSection);
-                }, null, "+=0.1")
-                .to(transitionOverlay, { autoAlpha: 0, duration: 0.4, ease: "power2.out", delay: 0.2 });
-            }
-
+            // --- PAGE NAVIGATION SETUP ---
             document.addEventListener('keydown', (e) => {
                 if (document.querySelector('.project-modal-overlay.open')) return;
                 if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goToSection(currentSectionIndex + 1);
@@ -606,12 +627,6 @@
                 dot.addEventListener('click', () => goToSection(index));
                 navDotsContainer.appendChild(dot);
             });
-
-            function updateNavDots() {
-                document.querySelectorAll('.nav-dot').forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentSectionIndex);
-                });
-            }
             
             document.querySelectorAll('header nav a, #mobile-menu a').forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -636,18 +651,18 @@
             const prevButton = document.querySelector('.carousel-nav-button.left');
             const nextButton = document.querySelector('.carousel-nav-button.right');
             const projectTiles = document.querySelectorAll('.project-tile');
-            let currentIndex = 0;
+            let carouselCurrentIndex = 0;
 
             function updateCarousel() {
                 const tileWidth = projectTiles[0].offsetWidth + 20;
                 const maxIndex = projectTiles.length - Math.floor(carouselTrack.parentElement.offsetWidth / tileWidth);
-                if (currentIndex > maxIndex) currentIndex = maxIndex;
-                if (currentIndex < 0) currentIndex = 0;
-                carouselTrack.style.transform = `translateX(-${currentIndex * tileWidth}px)`;
+                if (carouselCurrentIndex > maxIndex) carouselCurrentIndex = maxIndex;
+                if (carouselCurrentIndex < 0) carouselCurrentIndex = 0;
+                carouselTrack.style.transform = `translateX(-${carouselCurrentIndex * tileWidth}px)`;
             }
 
-            nextButton.addEventListener('click', () => { currentIndex++; updateCarousel(); });
-            prevButton.addEventListener('click', () => { currentIndex--; updateCarousel(); });
+            nextButton.addEventListener('click', () => { carouselCurrentIndex++; updateCarousel(); });
+            prevButton.addEventListener('click', () => { carouselCurrentIndex--; updateCarousel(); });
             window.addEventListener('resize', updateCarousel);
             
             const modal = document.getElementById('projectModal');
