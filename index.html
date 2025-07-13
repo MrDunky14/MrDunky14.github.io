@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krishna Singh | AI/ML Portfolio</title>
-    <!-- Metadata for SEO -->
     <meta name="description" content="Krishna Singh's AI/ML student portfolio showcasing projects, skills, and contact information with interactive page transitions.">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- GSAP for animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <style>
         @tailwind base;
@@ -261,7 +258,6 @@
     </header>
 
     <main class="w-full h-full relative">
-        <!-- Hero Section -->
         <section id="hero" class="slideshow-section text-white flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-12">
             <div class="flex-shrink-0 hero-animation-img z-10">
                 <img src="image.png" alt="Profile Picture of Krishna Singh" class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full border-4 border-[var(--color-accent)] shadow-lg object-cover">
@@ -273,15 +269,12 @@
                     Driving innovation through intelligent systems. I specialize in Machine Learning, Deep Learning, and Data Science, transforming complex data into actionable insights to solve real-world challenges.
                 </p>
                 <div class="mt-8 flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 hero-animation-buttons">
-                    <!-- FIX: Removed inline onclick and added ID for event listener -->
                     <a href="#" id="view-projects-btn" class="bg-[var(--color-accent)] text-[var(--color-primary-bg)] font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-opacity-80 transition-all duration-300 transform hover:scale-105 btn-glow">View Projects</a>
-                    <!-- FIX: Removed inline onclick and added ID for event listener -->
                     <a href="#" id="get-in-touch-btn" class="bg-transparent text-[var(--color-accent)] font-semibold py-3 px-6 rounded-lg border border-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-primary-bg)] transition-all duration-300 transform hover:scale-105 btn-glow">Get in Touch</a>
                 </div>
             </div>
         </section>
 
-        <!-- About Me Section -->
         <section id="about" class="slideshow-section">
             <div class="is-visible w-full h-full flex flex-col items-center justify-center">
                 <div class="content-container p-6 md:p-10">
@@ -304,15 +297,11 @@
             </div>
         </section>
         
-        <!-- === Skills Section === -->
         <section id="skills" class="slideshow-section">
             <div class="is-visible w-full h-full flex flex-col items-center justify-center max-w-6xl mx-auto">
-                 <!-- Responsive margin for title -->
                  <h2 class="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-6 md:mb-10 text-center fade-in-section">Technical Proficiency</h2>
-                 <!-- Responsive gap for grid -->
                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 w-full">
                     
-                    <!-- Languages & Databases -->
                     <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
                         <h3 class="text-xl font-bold text-white mb-4">Languages & Databases</h3>
                         <ul>
@@ -322,7 +311,6 @@
                         </ul>
                     </div>
                     
-                    <!-- ML Frameworks & Libraries -->
                     <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
                         <h3 class="text-xl font-bold text-white mb-4">ML Frameworks & Libraries</h3>
                         <ul>
@@ -332,7 +320,6 @@
                         </ul>
                     </div>
                     
-                    <!-- AI/ML Concepts -->
                     <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
                         <h3 class="text-xl font-bold text-white mb-4">AI/ML Concepts</h3>
                         <ul>
@@ -342,7 +329,6 @@
                         </ul>
                     </div>
 
-                    <!-- Tools & Platforms -->
                     <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
                         <h3 class="text-xl font-bold text-white mb-4">Tools & Platforms</h3>
                         <ul>
@@ -352,7 +338,6 @@
                         </ul>
                     </div>
 
-                    <!-- Databases -->
                     <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
                         <h3 class="text-xl font-bold text-white mb-4">Databases</h3>
                          <ul>
@@ -361,7 +346,6 @@
                         </ul>
                     </div>
                     
-                    <!-- Professional Skills -->
                     <div class="p-6 bg-[var(--color-secondary-bg)] rounded-lg card-hover-effect fade-in-section">
                         <h3 class="text-xl font-bold text-white mb-4">Professional Skills</h3>
                         <ul>
@@ -376,33 +360,33 @@
             </div>
         </section>
         
-        <!-- Projects Section -->
         <section id="projects" class="slideshow-section relative">
              <div class="is-visible w-full h-full flex flex-col items-center justify-center">
                  <h2 class="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-8 fade-in-section">My Projects</h2>
                  <div class="projects-carousel-container fade-in-section">
                      <div class="projects-carousel-track">
-                         <!-- Project Tile 1 -->
+                         <div class="project-tile card-hover-effect" data-project-id="99">
+                             <img src="Top.webp" alt="Top Project" loading="lazy" class="rounded-t-lg w-full h-48 object-cover">
+                             <div class="p-4">
+                                 <h3 class="text-xl font-bold text-[var(--color-accent)]">Predictive Maintenance: Remaining Useful Life (RUL)</h3>
+                                 <p class="mt-2 text-sm text-[var(--color-main-text)]">A predictive maintenance solution for turbofan aircraft engines</p>
+                             </div>
+                         </div>
                          <div class="project-tile card-hover-effect" data-project-id="1">
-                             <!-- Optimization: Added lazy loading -->
                              <img src="Project1.png" alt="Project 1" loading="lazy" class="rounded-t-lg w-full h-48 object-cover">
                              <div class="p-4">
                                  <h3 class="text-xl font-bold text-[var(--color-accent)]">🌎 Deep Earth Sentinel</h3>
                                  <p class="mt-2 text-sm text-[var(--color-main-text)]">A neural network for plastic waste source classification.</p>
                              </div>
                          </div>
-                         <!-- Project Tile 2 -->
                          <div class="project-tile card-hover-effect" data-project-id="2">
-                             <!-- Optimization: Added lazy loading -->
                              <img src="Project2.png" alt="Project 2" loading="lazy" class="rounded-t-lg w-full h-48 object-cover">
                              <div class="p-4">
                                  <h3 class="text-xl font-bold text-[var(--color-accent)]">Predicting Customer Churn</h3>
                                  <p class="mt-2 text-sm text-[var(--color-main-text)]">A comprehensive analysis and predictive modeling solution for customer churn</p>
                              </div>
                          </div>
-                         <!-- Project Tile 3 -->
                          <div class="project-tile card-hover-effect" data-project-id="3">
-                             <!-- Optimization: Added lazy loading -->
                              <img src="Project3.png" alt="Project 3" loading="lazy" class="rounded-t-lg w-full h-48 object-cover">
                              <div class="p-4">
                                  <h3 class="text-xl font-bold text-[var(--color-accent)]">Human Disease Prediction</h3>
@@ -416,7 +400,6 @@
             </div>
         </section>
 
-        <!-- Contact Section -->
         <section id="contact" class="slideshow-section">
              <div class="is-visible w-full h-full flex flex-col items-center justify-center max-w-2xl mx-auto text-center">
                 <h2 class="text-3xl md:text-4xl font-bold text-[var(--color-accent)] mb-4 fade-in-section">Get in Touch</h2>
@@ -424,13 +407,11 @@
                     I'm always open to discussing new projects, creative ideas, or opportunities to be part of an innovative team. Feel free to reach out to me.
                 </p>
                 <div class="fade-in-section">
-                    <!-- UPDATE: Changed mailto link -->
                     <a href="mailto:krishnasingh8627@gmail.com" class="inline-block bg-[var(--color-accent)] text-[var(--color-primary-bg)] font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-opacity-80 transition-all duration-300 transform hover:scale-105 btn-glow">
                         Say Hello
                     </a>
                 </div>
                 <div class="flex justify-center space-x-6 mt-10 fade-in-section">
-                    <!-- UPDATE: Changed GitHub link -->
                     <a href="https://github.com/MrDunky14" target="_blank" rel="noopener noreferrer" class="text-[var(--color-main-text)] hover:text-[var(--color-accent)] transition-colors duration-300"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.286 2.55 7.94 6.06 9.385.44.082.6-.192.6-.427V18.73c-2.43.528-2.94-1.17-2.94-1.17-.4-.993-1-1.27-1-1.27-.8-.546.06-.535.06-.535.88.062 1.35.903 1.35.903.78 1.336 2.04 1.026 2.54.784.08-.61.3-1.025.55-1.26-1.94-.22-3.98-.97-3.98-4.32 0-.954.34-1.734.9-2.34-.09-.22-.39-1.11.08-2.31 0 0 .73-.235 2.4 1.435a8.4 8.4 0 012.2-.298c.75.002 1.5.1 2.2.298 1.66-1.67 2.39-1.435 2.39-1.435.48 1.2.18 2.09.09 2.31.56.606.9 1.386.9 2.34 0 3.36-2.04 4.1-3.99 4.31.31.268.58.798.58 1.61v2.38c0 .237.16.51.6.426A10.007 10.007 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"/></svg></a>
                 </div>
             </div>
@@ -450,6 +431,7 @@
                  <div id="modalProjectSkills" class="flex flex-wrap gap-2"></div>
                  <div class="mt-6">
                     <a id="modalProjectLink" href="#" target="_blank" class="inline-block bg-[var(--color-accent)] text-[var(--color-primary-bg)] font-semibold py-2 px-4 rounded-lg hover:bg-opacity-80 transition-colors duration-300 btn-glow">View Project</a>
+                    <a id="modalLiveDemoLink" href="#" target="_blank" class="inline-block bg-transparent text-[var(--color-accent)] font-semibold py-2 px-4 rounded-lg border border-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-primary-bg)] transition-all duration-300 transform hover:scale-105 btn-glow ml-4" style="display: none;">Live Demo</a>
                  </div>
              </div>
          </div>
@@ -643,6 +625,7 @@
 
             // --- PROJECTS CAROUSEL & MODAL SCRIPT ---
             const projectData = {
+                "99": { title: "Predictive Maintenance: Remaining Useful Life (RUL)", description: "This project focuses on developing a predictive maintenance solution for turbofan aircraft engines by accurately forecasting their Remaining Useful Life (RUL) using sensor time-series data.", image: "Top.webp", skills: ["TensorFlow", "Python", "NLP", "ML", "Streamlit",'FastApi','Keras Tuner','Pandas','Numpy','Joblib'], link: "https://github.com/MrDunky14/Predictive-Maintenance-Remaining-Useful-Life-RUL-Prediction", liveLink: "https://mrdunky14-predictive-maintenance-remaining-useful-li-app-gn3ptq.streamlit.app" },
                 "1": { title: "🌎 Deep Earth Sentinel: AI-Powered Microplastic Pollution Source Identification", description: "Deep Earth Sentinel is a deep learning-driven initiative aimed at combating microplastic pollution by accurately identifying the geographical origin of plastic bottle waste...", image: "Project1.png", skills: ["TensorFlow", "Python", "NLP", "Machine Learning", "Streamlit"], link: "https://github.com/MrDunky14/Plastic-Source-Identification-using-DL" },
                 "2": { title: "Predicting Customer Churn: An Advanced Machine Learning", description: "This project presents a comprehensive analysis and predictive modeling solution for customer churn in a telecommunications context...", image: "Project2.png", skills: ["Sklearn", "Machine Learning", "Python", "Data Science", "Pandas"], link: "https://github.com/MrDunky14/Predicting-Customer-Churn-An-Advanced-Machine-Learning" },
                 "3": { title: "Human Disease Prediction Model", description: "This project presents a robust machine learning model designed for the accurate prediction of human diseases based solely on patient-reported symptoms...", image: "Project3.png", skills: ["cuML", "Transformers", "Model Interpretion", "Machine Learning"], link: "https://github.com/MrDunky14/Human-Disease-Prediction-Model" },
@@ -684,6 +667,15 @@
                         skillTag.textContent = skill;
                         skillsContainer.appendChild(skillTag);
                     });
+
+                    // NEW: LOGIC FOR LIVE DEMO BUTTON
+                    const liveDemoButton = document.getElementById('modalLiveDemoLink');
+                    if (data.liveLink) {
+                        liveDemoButton.href = data.liveLink;
+                        liveDemoButton.style.display = 'inline-block';
+                    } else {
+                        liveDemoButton.style.display = 'none';
+                    }
 
                     modal.classList.add('open');
                     document.body.classList.add('no-scroll');
