@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Singh | AI/ML Portfolio</title>
+    <meta name="description" content="Krishna Singh's redesigned AI/ML student portfolio featuring 3D animations, professional UI, and interactive elements.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        #particle-canvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0; /* Behind other content, adjust if needed */
+          pointer-events: none; /* So it doesn't block other interactions */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+            color: #E2E8F0;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 1; /* Ensure content is above canvas */
+        }
+
+        /* --- Glassmorphism Effect --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+
+        /* --- 3D Canvas Container --- */
+        #three-canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        #three-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- Hero Section Text Animation --- */
+        .anime-letter {
+            display: inline-block;
+            opacity: 0;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1E293B; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #34D399; }
+        
+        /* --- Animated Gradient Button --- */
+        .gradient-btn {
+            background-size: 200% auto;
+            transition: background-position 0.5s;
+        }
+        .gradient-btn:hover {
+            background-position: right center;
+        }
+        
+        /* --- Project Card 3D Tilt Effect --- */
+        .project-card {
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .project-card:hover {
+            transform: perspective(1000px) rotateY(var(--rotateY)) rotateX(var(--rotateX)) scale3d(1.05, 1.05, 1.05);
+        }
+        
+        /* --- Section Animation --- */
+        .animate-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animate-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+    <canvas id="particle-canvas"></canvas>
+    <!-- Header -->
+    <header id="header" class="glass-card fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-5xl mx-auto py-3 px-6 z-50 transition-all duration-300">
+        <nav class="flex justify-between items-center">
+            <a href="#hero" class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">Krishna Singh</a>
+            <ul class="hidden md:flex items-center space-x-6 text-slate-300">
+                <li><a href="#about" class="hover:text-emerald-400 transition-colors">About</a></li>
+                <li><a href="#skills" class="hover:text-emerald-400 transition-colors">Skills</a></li>
+                <li><a href="#projects" class="hover:text-emerald-400 transition-colors">Projects</a></li>
+                <li><a href="#contact" class="hover:text-emerald-400 transition-colors">Contact</a></li>
+            </ul>
+             <button id="mobile-menu-button" class="md:hidden text-slate-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden mt-4">
+             <ul class="flex flex-col items-center py-2 space-y-3">
+                <li><a href="#about" class="block w-full text-center py-2 text-slate-300">About</a></li>
+                <li><a href="#skills" class="block w-full text-center py-2 text-slate-300">Skills</a></li>
+                <li><a href="#projects" class="block w-full text-center py-2 text-slate-300">Projects</a></li>
+                <li><a href="#contact" class="block w-full text-center py-2 text-slate-300">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6">
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-screen flex items-center justify-center relative text-center">
+            <div id="three-canvas-container">
+                <canvas id="three-canvas"></canvas>
+            </div>
+            <div class="relative z-10 max-w-4xl">
+            <h1 id="hero-title" class="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-4 bg-clip-text bg-gradient-to-b from-white to-slate-400">
+                Hi, I'm Krishna
+            </h1>
+                <p id="hero-subtitle" class="text-xl md:text-2xl text-slate-300 mb-8 max-w-2xl mx-auto opacity-0">
+                    An Aspiring AI/ML Engineer transforming complex data into actionable insights to solve real-world challenges.
+                </p>
+                <div id="hero-buttons" class="flex flex-col sm:flex-row justify-center items-center gap-4 opacity-0">
+                    <a href="#projects" class="gradient-btn font-semibold py-3 px-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg shadow-emerald-500/20">
+                        View My Work
+                    </a>
+                    <a href="#contact" class="font-semibold py-3 px-8 rounded-full text-slate-300 border border-slate-600 hover:bg-slate-800 transition-colors">
+                        Get In Touch
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24 animate-section">
+            <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-12 items-start">
+                <div class="md:col-span-1">
+                    <h2 class="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">About Me</h2>
+                    <div class="h-1 w-20 bg-emerald-500 rounded-full"></div>
+                </div>
+                <div class="md:col-span-2 text-slate-300 text-lg space-y-6">
+                    <p>I am a dedicated AI/ML Engineer with a strong foundation in mathematics, statistics, and programming. My journey in artificial intelligence began with a fascination for how machines can learn and adapt, leading me to explore various domains within the field.</p>
+                    <p>My academic pursuits have equipped me with hands-on experience in developing and deploying machine learning models, from traditional algorithms to advanced deep learning architectures. I am proficient in Python and comfortable with popular frameworks like TensorFlow, PyTorch, and scikit-learn.</p>
+                    <p>I thrive on challenging problems and am constantly seeking opportunities to apply my knowledge to real-world scenarios, contribute to innovative projects, and grow as a machine learning engineer.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-24 animate-section">
+            <div class="text-center max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">Technical Proficiency</h2>
+                <p class="text-slate-400 mb-12">A snapshot of the tools and technologies I work with.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 text-left">
+                        <h3 class="text-xl font-bold text-white mb-4">Languages & Databases</h3>
+                        <ul class="space-y-2 text-slate-300">
+                            <li class="flex items-center gap-2"><span>🐍</span> Python</li>
+                            <li class="flex items-center gap-2"><span>📊</span> R</li>
+                            <li class="flex items-center gap-2"><span>💾</span> SQL (PostgreSQL, MongoDB)</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-6 text-left">
+                        <h3 class="text-xl font-bold text-white mb-4">ML Frameworks</h3>
+                        <ul class="space-y-2 text-slate-300">
+                            <li class="flex items-center gap-2"><span>🔥</span> TensorFlow & Keras</li>
+                            <li class="flex items-center gap-2"><span>pytorch</span> PyTorch</li>
+                            <li class="flex items-center gap-2"><span>⚙️</span> Scikit-Learn, Pandas, NumPy</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-6 text-left">
+                        <h3 class="text-xl font-bold text-white mb-4">AI/ML Concepts</h3>
+                        <ul class="space-y-2 text-slate-300">
+                           <li class="flex items-center gap-2"><span>🧠</span> Deep & Machine Learning</li>
+                            <li class="flex items-center gap-2"><span>💬</span> Natural Language Processing</li>
+                            <li class="flex items-center gap-2"><span>👁️</span> Computer Vision</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-6 text-left">
+                        <h3 class="text-xl font-bold text-white mb-4">Tools & Platforms</h3>
+                        <ul class="space-y-2 text-slate-300">
+                             <li class="flex items-center gap-2"><span>📦</span> Docker</li>
+                            <li class="flex items-center gap-2"><span>☁️</span> AWS (S3, EC2)</li>
+                            <li class="flex items-center gap-2"><span>🌿</span> Git & GitHub</li>
+                        </ul>
+                    </div>
+                     <div class="glass-card p-6 text-left">
+                        <h3 class="text-xl font-bold text-white mb-4">Databases</h3>
+                         <ul class="space-y-2 text-slate-300">
+                            <li class="flex items-center gap-2"><span>🍃</span> MongoDB</li>
+                            <li class="flex items-center gap-2"><span>🐘</span> PostgreSQL</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-6 text-left">
+                        <h3 class="text-xl font-bold text-white mb-4">Professional Skills</h3>
+                        <ul class="space-y-2 text-slate-300">
+                           <li class="flex items-center gap-2"><span>💡</span> Problem Solving</li>
+                            <li class="flex items-center gap-2"><span>🤔</span> Critical Thinking</li>
+                            <li class="flex items-center gap-2"><span>🤝</span> Collaboration</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-24 animate-section">
+            <div class="text-center max-w-6xl mx-auto">
+                 <h2 class="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">My Projects</h2>
+                <p class="text-slate-400 mb-12">Here are some of the projects I'm proud to have worked on.</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project Cards will be injected here by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 animate-section">
+            <div class="text-center max-w-2xl mx-auto glass-card p-8 md:p-12">
+                <h2 class="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">Get In Touch</h2>
+                <p class="text-slate-300 mb-8">
+                    I'm currently open to new opportunities and collaborations. Feel free to send me a message!
+                </p>
+                 <a href="mailto:krishnasingh8627@gmail.com" class="gradient-btn inline-block font-semibold py-3 px-8 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white shadow-lg shadow-emerald-500/20">
+                    Say Hello
+                </a>
+                <div class="flex justify-center space-x-6 mt-10">
+                    <a href="https://github.com/MrDunky14" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-emerald-400 transition-transform duration-300 hover:scale-110">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.286 2.55 7.94 6.06 9.385.44.082.6-.192.6-.427V18.73c-2.43.528-2.94-1.17-2.94-1.17-.4-.993-1-1.27-1-1.27-.8-.546.06-.535.06-.535.88.062 1.35.903 1.35.903.78 1.336 2.04 1.026 2.54.784.08-.61.3-1.025.55-1.26-1.94-.22-3.98-.97-3.98-4.32 0-.954.34-1.734.9-2.34-.09-.22-.39-1.11.08-2.31 0 0 .73-.235 2.4 1.435a8.4 8.4 0 012.2-.298c.75.002 1.5.1 2.2.298 1.66-1.67 2.39-1.435 2.39-1.435.48 1.2.18 2.09.09 2.31.56.606.9 1.386.9 2.34 0 3.36-2.04 4.1-3.99 4.31.31.268.58.798.58 1.61v2.38c0 .237.16.51.6.426A10.007 10.007 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"/></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center p-4 z-[100] opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="modalContent" class="glass-card w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 rounded-2xl relative transform scale-95 transition-all duration-300">
+             <button id="closeModalBtn" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+             </button>
+             <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <img id="modalProjectImage" src="https://placehold.co/600x400/0A0A0A/34D399?text=Project" alt="Project Image" class="w-full h-auto rounded-lg object-cover">
+                </div>
+                <div>
+                    <h3 id="modalProjectTitle" class="text-2xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">Project Title</h3>
+                    <div id="modalProjectSkills" class="flex flex-wrap gap-2 mb-4"></div>
+                    <p id="modalProjectDescription" class="text-slate-300 mb-6"></p>
+                    <div class="flex items-center gap-4">
+                        <a id="modalProjectLink" href="#" target="_blank" class="gradient-btn font-semibold py-2 px-6 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white">View on GitHub</a>
+                        <a id="modalLiveDemoLink" href="#" target="_blank" class="font-semibold py-2 px-6 rounded-full text-slate-300 border border-slate-600 hover:bg-slate-800 transition-colors" style="display: none;">Live Demo</a>
+                    </div>
+                </div>
+             </div>
+        </div>
+    </div>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <!-- Main Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- DATA ---
+            const projectData = {
+                "1": { title: "Predictive Maintenance: RUL", description: "A predictive maintenance solution for turbofan aircraft engines by forecasting their Remaining Useful Life (RUL) using sensor time-series data.", image: "Top.webp", skills: ["TensorFlow", "Python", "Streamlit", 'FastApi'], link: "https://github.com/MrDunky14/Predictive-Maintenance-Remaining-Useful-Life-RUL-Prediction", liveLink: "https://mrdunky14-predictive-maintenance-remaining-useful-li-app-gn3ptq.streamlit.app" },
+                "2": { title: "Deep Earth Sentinel", description: "An AI-powered initiative to combat microplastic pollution by identifying the geographical origin of plastic bottle waste.", image: "Project1.webp", skills: ["TensorFlow", "Python", "NLP", "Streamlit"], link: "https://github.com/MrDunky14/Plastic-Source-Identification-using-DL", liveLink: null },
+                "3": { title: "Predicting Customer Churn", description: "A comprehensive analysis and predictive modeling solution for customer churn in a telecommunications context.", image: "Project2.webp", skills: ["Scikit-Learn", "ML", "Python", "Pandas"], link: "https://github.com/MrDunky14/Predicting-Customer-Churn-An-Advanced-Machine-Learning", liveLink: null },
+                "4": { title: "Human Disease Prediction", description: "A robust machine learning model designed for the accurate prediction of human diseases based on patient-reported symptoms.", image: "Project3.webp", skills: ["cuML", "Transformers", "ML", "Model Interpretion"], link: "https://github.com/MrDunky14/Human-Disease-Prediction-Model", liveLink: null },
+            };
+
+            // --- 1. THREE.JS 3D HERO ANIMATION ---
+            let scene, camera, renderer, shape;
+
+            function initThree() {
+                const container = document.getElementById('three-canvas-container');
+                scene = new THREE.Scene();
+                
+                camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+                camera.position.z = 5;
+
+                renderer = new THREE.WebGLRenderer({ 
+                    canvas: document.getElementById('three-canvas'),
+                    alpha: true,
+                    antialias: true 
+                });
+                renderer.setSize(container.offsetWidth, container.offsetHeight);
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setClearColor(0x000000, 0);
+                
+                const pointLight1 = new THREE.PointLight(0x34D399, 1);
+                pointLight1.position.set(5, 5, 5);
+                scene.add(pointLight1);
+                
+                const pointLight2 = new THREE.PointLight(0x0E7490, 1);
+                pointLight2.position.set(-5, -5, 5);
+                scene.add(pointLight2);
+                
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+                scene.add(ambientLight);
+
+                window.addEventListener('resize', onWindowResize, false);
+                document.addEventListener('mousemove', onMouseMove, false);
+                
+                animate();
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            }
+
+            function onWindowResize() {
+                const container = document.getElementById('three-canvas-container');
+                camera.aspect = container.offsetWidth / container.offsetHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.offsetWidth, container.offsetHeight);
+            }
+            
+            function onMouseMove(event) {
+                    const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                    const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+                     anime({
+                        targets: camera.position,
+                        x: mouseX * 0.5,
+                        y: mouseY * 0.5,
+                        duration: 1500,
+                        easing: 'easeOutExpo'
+                    });
+
+            }
+
+
+            // --- 2. ANIME.JS UI ANIMATIONS ---
+            function initAnime() {
+                // Hero Text Animation
+                const title = document.getElementById('hero-title');
+                title.innerHTML = title.textContent.replace(/\S/g, "<span class='anime-letter'>$&</span>");
+
+                anime.timeline({
+                    easing: 'easeOutExpo',
+                })
+                .add({
+                    targets: '#hero-title .anime-letter',
+                    translateY: [40, 0],
+                    opacity: [0, 1],
+                    duration: 1500,
+                    delay: anime.stagger(50)
+                })
+                .add({
+                    targets: ['#hero-subtitle', '#hero-buttons'],
+                    translateY: [20, 0],
+                    opacity: [0, 1],
+                    duration: 1000,
+                    offset: '-=1000'
+                });
+
+                // Scroll Animations
+                const sections = document.querySelectorAll('.animate-section');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                sections.forEach(section => {
+                    observer.observe(section);
+                });
+            }
+
+            // --- 3. PROJECT CARDS & MODAL ---
+            function populateProjects() {
+                const projectsContainer = document.querySelector('#projects .grid');
+                if (!projectsContainer) return;
+                
+                projectsContainer.innerHTML = '';
+                Object.keys(projectData).forEach(key => {
+                    const project = projectData[key];
+                    const cardHTML = `
+                        <div class="project-card glass-card overflow-hidden group cursor-pointer" data-project-id="${key}">
+                            <div class="overflow-hidden">
+                                <img src="${project.image}" alt="${project.title}" loading="lazy" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500">
+                            </div>
+                            <div class="p-6 text-left">
+                                <h3 class="text-xl font-bold text-white mb-2">${project.title}</h3>
+                                <p class="text-slate-400 text-sm">${project.description}</p>
+                            </div>
+                        </div>
+                    `;
+                    projectsContainer.innerHTML += cardHTML;
+                });
+            }
+            
+            function setupProjectInteractions() {
+                const cards = document.querySelectorAll('.project-card');
+                cards.forEach(card => {
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        const rotateY = (x / rect.width - 0.5) * 20; // Max 10deg rotation
+                        const rotateX = (0.5 - y / rect.height) * 20; // Max 10deg rotation
+                        card.style.setProperty('--rotateY', `${rotateY}deg`);
+                        card.style.setProperty('--rotateX', `${rotateX}deg`);
+                    });
+
+                    card.addEventListener('mouseleave', () => {
+                        card.style.setProperty('--rotateY', '0deg');
+                        card.style.setProperty('--rotateX', '0deg');
+                    });
+                    
+                    card.addEventListener('click', () => openModal(card.dataset.projectId));
+                });
+            }
+            
+            const modal = document.getElementById('projectModal');
+            const modalContent = document.getElementById('modalContent');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            
+            function openModal(projectId) {
+                const data = projectData[projectId];
+                if (!data) return;
+
+                document.getElementById('modalProjectTitle').textContent = data.title;
+                document.getElementById('modalProjectDescription').textContent = data.description;
+                document.getElementById('modalProjectImage').src = data.image;
+                document.getElementById('modalProjectLink').href = data.link;
+
+                const skillsContainer = document.getElementById('modalProjectSkills');
+                skillsContainer.innerHTML = '';
+                data.skills.forEach(skill => {
+                    const skillTag = document.createElement('span');
+                    skillTag.className = 'bg-slate-700 text-emerald-400 text-xs font-medium px-2 py-1 rounded';
+                    skillTag.textContent = skill;
+                    skillsContainer.appendChild(skillTag);
+                });
+
+                const liveDemoButton = document.getElementById('modalLiveDemoLink');
+                if (data.liveLink) {
+                    liveDemoButton.href = data.liveLink;
+                    liveDemoButton.style.display = 'inline-block';
+                } else {
+                    liveDemoButton.style.display = 'none';
+                }
+
+                modal.classList.remove('pointer-events-none');
+                modal.classList.add('opacity-100');
+                modalContent.classList.remove('scale-95');
+            }
+
+            function closeModal() {
+                modal.classList.add('pointer-events-none');
+                modal.classList.remove('opacity-100');
+                modalContent.classList.add('scale-95');
+            }
+
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // --- 4. HEADER & MOBILE MENU ---
+            function initHeader() {
+                const header = document.getElementById('header');
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 50) {
+                        header.classList.add('py-2');
+                        header.classList.remove('py-3');
+                    } else {
+                        header.classList.add('py-3');
+                        header.classList.remove('py-2');
+                    }
+                });
+                
+                const mobileMenuButton = document.getElementById('mobile-menu-button');
+                const mobileMenu = document.getElementById('mobile-menu');
+                mobileMenuButton.addEventListener('click', () => {
+                     mobileMenu.classList.toggle('hidden');
+                });
+
+                // Close mobile menu on link click
+                document.querySelectorAll('#mobile-menu a').forEach(link => {
+                    link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+                });
+            }
+
+
+            // --- INITIALIZATION ---
+            initThree();
+            initAnime();
+            populateProjects();
+            setupProjectInteractions();
+            initHeader();
+        });
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        let mouse = {
+          x: null,
+          y: null,
+          radius: 100
+        };
+
+        function setupCanvas() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          particles = [];
+          const particleDensity = window.innerWidth > 768 ? 20000 : 9000;
+          const numberOfParticles = (canvas.height * canvas.width) / particleDensity;
+
+          for (let i = 0; i < numberOfParticles; i++) {
+            let size = Math.random() * 2 + 1;
+            let x = Math.random() * (innerWidth - size * 2) + size * 2;
+            let y = Math.random() * (innerHeight - size * 2) + size * 2;
+            let directionX = (Math.random() * 0.4) - 0.2;
+            let directionY = (Math.random() * 0.4) - 0.2;
+            let color = 'rgba(52, 211, 153, 0.5)';
+            particles.push({ x, y, directionX, directionY, size, color });
+          }
+        }
+
+        function drawParticles() {
+          particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2, false);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+          });
+        }
+
+        function connectParticles() {
+          let connectDistance = window.innerWidth > 768 ? 120 : 150;
+          for (let a = 0; a < particles.length; a++) {
+            for (let b = a; b < particles.length; b++) {
+              let dx = particles[a].x - particles[b].x;
+              let dy = particles[a].y - particles[b].y;
+              let distance = Math.sqrt(dx * dx + dy * dy);
+              if (distance < connectDistance) {
+                let opacityValue = 1 - (distance / connectDistance);
+                ctx.strokeStyle = `rgba(229, 231, 235, ${opacityValue})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(particles[a].x, particles[a].y);
+                ctx.lineTo(particles[b].x, particles[b].y);
+                ctx.stroke();
+              }
+            }
+          }
+        }
+
+        function updateParticles() {
+          particles.forEach(p => {
+            if (p.x + p.size > canvas.width || p.x - p.size < 0) {
+              p.directionX = -p.directionX;
+            }
+            if (p.y + p.size > canvas.height || p.y - p.size < 0) {
+              p.directionY = -p.directionY;
+            }
+
+            // Mouse interaction - particles repel from mouse
+            let dx = mouse.x - p.x;
+            let dy = mouse.y - p.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < mouse.radius + p.size) {
+              if (mouse.x < p.x && p.x < canvas.width - p.size * 10) {
+                p.x += 3;
+              } else if (mouse.x > p.x && p.x > p.size * 10) {
+                p.x -= 3;
+              }
+              if (mouse.y < p.y && p.y < canvas.height - p.size * 10) {
+                p.y += 3;
+              } else if (mouse.y > p.y && p.y > p.size * 10) {
+                p.y -= 3;
+              }
+            }
+
+            p.x += p.directionX;
+            p.y += p.directionY;
+          });
+        }
+
+        function animate() {
+          requestAnimationFrame(animate);
+          ctx.clearRect(0, 0, innerWidth, innerHeight);
+          drawParticles();
+          connectParticles();
+          updateParticles();
+        }
+
+        window.addEventListener('resize', setupCanvas);
+        window.addEventListener('mousemove', (event) => {
+          mouse.x = event.x;
+          mouse.y = event.y;
+        });
+        window.addEventListener('mouseout', () => {
+          mouse.x = undefined;
+          mouse.y = undefined;
+        });
+
+        // Initialize canvas and animation
+        setupCanvas();
+        animate();
+    </script>
+
+</body>
+</html>
+
