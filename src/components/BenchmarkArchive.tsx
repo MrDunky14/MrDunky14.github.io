@@ -75,7 +75,13 @@ export function BenchmarkArchive() {
         </div>
 
         {/* High-Density Tabular Numbers Table */}
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 overflow-hidden shadow-lg shadow-black/30">
+        <div className="specular-card rounded-xl overflow-hidden relative shadow-2xl">
+          {/* Corner Crosshairs */}
+          <span className="corner-cross top-2 left-2 text-zinc-600">+</span>
+          <span className="corner-cross top-2 right-2 text-zinc-600">+</span>
+          <span className="corner-cross bottom-2 left-2 text-zinc-600">+</span>
+          <span className="corner-cross bottom-2 right-2 text-zinc-600">+</span>
+
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>

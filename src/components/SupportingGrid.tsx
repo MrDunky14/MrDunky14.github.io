@@ -39,18 +39,24 @@ export function SupportingGrid() {
           {SUPPORTING_PROJECTS.map((project) => (
             <div
               key={project.id}
-              className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 flex flex-col justify-between hover:border-zinc-700/80 transition-all shadow-sm"
+              className="specular-card rounded-xl p-6 flex flex-col justify-between relative overflow-hidden group"
             >
+              {/* Corner Crosshairs */}
+              <span className="corner-cross top-2 left-2 text-zinc-600">+</span>
+              <span className="corner-cross top-2 right-2 text-zinc-600">+</span>
+              <span className="corner-cross bottom-2 left-2 text-zinc-600">+</span>
+              <span className="corner-cross bottom-2 right-2 text-zinc-600">+</span>
+
               <div>
                 {/* Header */}
-                <div className="flex items-center justify-between pb-3 mb-4 border-b border-zinc-800">
+                <div className="flex items-center justify-between pb-3 mb-4 border-b border-zinc-800/80">
                   <div className="flex items-center space-x-2">
                     {getIcon(project.id)}
                     <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold">
                       {project.category}
                     </span>
                   </div>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-zinc-800/90 text-zinc-300 border border-zinc-700/80">
                     {project.status}
                   </span>
                 </div>

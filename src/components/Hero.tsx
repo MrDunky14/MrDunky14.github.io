@@ -129,7 +129,13 @@ export function Hero() {
         </div>
 
         {/* Battle Station Telemetry Bar */}
-        <div id="telemetry" className="mt-8 p-4 rounded-lg border border-zinc-800/90 bg-zinc-900/50 backdrop-blur-sm">
+        <div id="telemetry" className="specular-card mt-8 p-5 rounded-xl border border-zinc-800/90 relative overflow-hidden">
+          {/* Corner Crosshairs */}
+          <span className="corner-cross top-2 left-2 text-zinc-600">+</span>
+          <span className="corner-cross top-2 right-2 text-zinc-600">+</span>
+          <span className="corner-cross bottom-2 left-2 text-zinc-600">+</span>
+          <span className="corner-cross bottom-2 right-2 text-zinc-600">+</span>
+
           <div className="flex items-center justify-between pb-3 mb-3 border-b border-zinc-800/80">
             <div className="flex items-center space-x-2">
               <Activity className="w-4 h-4 text-emerald-400" />
@@ -143,20 +149,20 @@ export function Hero() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-mono">
-            <div className="p-2.5 rounded bg-zinc-950/60 border border-zinc-800/60">
-              <span className="text-[10px] text-zinc-400 block uppercase">Host CPU</span>
+            <div className="p-2.5 rounded bg-zinc-950/80 border border-zinc-800/70">
+              <span className="text-[10px] text-zinc-500 block uppercase">Host CPU</span>
               <span className="text-zinc-200 font-semibold">{TELEMETRY_SPECS.cpu}</span>
             </div>
-            <div className="p-2.5 rounded bg-zinc-950/60 border border-zinc-800/60">
-              <span className="text-[10px] text-zinc-400 block uppercase">Compute GPU</span>
+            <div className="p-2.5 rounded bg-zinc-950/80 border border-zinc-800/70">
+              <span className="text-[10px] text-zinc-500 block uppercase">Compute GPU</span>
               <span className="text-zinc-200 font-semibold">{TELEMETRY_SPECS.gpu}</span>
             </div>
-            <div className="p-2.5 rounded bg-zinc-950/60 border border-zinc-800/60">
-              <span className="text-[10px] text-zinc-400 block uppercase">Toolchain &amp; Compiler</span>
+            <div className="p-2.5 rounded bg-zinc-950/80 border border-zinc-800/70">
+              <span className="text-[10px] text-zinc-500 block uppercase">Toolchain &amp; Compiler</span>
               <span className="text-zinc-200 font-semibold">{TELEMETRY_SPECS.compiler}</span>
             </div>
-            <div className="p-2.5 rounded bg-zinc-950/60 border border-zinc-800/60">
-              <span className="text-[10px] text-zinc-400 block uppercase">SIMD / Vector Pipeline</span>
+            <div className="p-2.5 rounded bg-zinc-950/80 border border-zinc-800/70">
+              <span className="text-[10px] text-zinc-500 block uppercase">SIMD / Vector Pipeline</span>
               <span className="text-zinc-200 font-semibold">{TELEMETRY_SPECS.simd}</span>
             </div>
           </div>

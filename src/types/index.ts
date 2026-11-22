@@ -8,6 +8,9 @@ export interface MyelinMetricCell {
   frameTimeMs: number;
   fps: number;
   vramMb: number;
+  weightKb: number;
+  psnrDb: number;
+  psnrGain: string;
   numericalParity: string;
   speedupVsBaseline?: string;
 }

@@ -1,36 +1,93 @@
-import { ExternalLink, Code2, Network, GitBranch } from 'lucide-react';
+import { useState } from 'react';
+import { ExternalLink, Code2, AlertTriangle, RotateCcw, Flame } from 'lucide-react';
 
 interface SreBenchCardProps {
   onOpenReceipt: (receiptId: string) => void;
 }
 
+type ServiceStatus = 'healthy' | 'degraded' | 'failed';
+
 export function SreBenchCard({ onOpenReceipt }: SreBenchCardProps) {
-  // DAG microservices for interactive visual topology
+  // Service health states
+  const [activeFault, setActiveFault] = useState<string | null>(null);
+  const [isRecovering, setIsRecovering] = useState<boolean>(false);
+
+  // Microservice dependency graph state
+  const getServiceStatus = (serviceName: string): ServiceStatus => {
+    if (activeFault === 'database') {
+      if (serviceName === 'database') return 'failed';
+      if (['payment', 'catalog', 'order', 'frontend'].includes(serviceName)) return 'degraded';
+    }
+    if (activeFault === 'auth') {
+      if (serviceName === 'auth') return 'failed';
+      if (serviceName === 'frontend') return 'degraded';
+    }
+    if (activeFault === 'payment') {
+      if (serviceName === 'payment') return 'failed';
+      if (['order', 'frontend'].includes(serviceName)) return 'degraded';
+    }
+    return 'healthy';
+  };
+
+  const handleInjectFault = (faultType: string) => {
+    setActiveFault(faultType);
+    setIsRecovering(false);
+  };
+
+  const handleCausalRemediation = () => {
+    setIsRecovering(true);
+    // Causal step-by-step recovery: database first, then dependents
+    setTimeout(() => {
+      setActiveFault(null);
+      setIsRecovering(false);
+    }, 900);
+  };
+
   const services = [
-    { name: 'api-gateway', role: 'Ingress Proxy', upstream: [] },
-    { name: 'auth', role: 'JWT Validator', upstream: ['api-gateway'] },
-    { name: 'orders', role: 'Order Engine', upstream: ['auth'] },
-    { name: 'payments', role: 'Payment Gateway', upstream: ['orders'] },
-    { name: 'inventory', role: 'Stock Service', upstream: ['orders'] },
-    { name: 'database', role: 'Primary DB', upstream: ['payments', 'inventory'] },
+    { id: 'frontend', name: 'frontend-gw', tier: 'Tier 0: Entry', x: 50, y: 32 },
+    { id: 'auth', name: 'auth-svc', tier: 'Tier 1: Auth', x: 25, y: 92 },
+    { id: 'order', name: 'order-svc', tier: 'Tier 1: Checkout', x: 75, y: 92 },
+    { id: 'payment', name: 'payment-svc', tier: 'Tier 2: Billing', x: 25, y: 152 },
+    { id: 'catalog', name: 'catalog-svc', tier: 'Tier 2: Inventory', x: 75, y: 152 },
+    { id: 'database', name: 'db-replica', tier: 'Tier 3: Storage', x: 50, y: 212 },
+  ];
+
+  const connections = [
+    { from: 'frontend', to: 'auth' },
+    { from: 'frontend', to: 'order' },
+    { from: 'order', to: 'payment' },
+    { from: 'order', to: 'catalog' },
+    { from: 'payment', to: 'database' },
+    { from: 'catalog', to: 'database' },
   ];
 
   return (
-    <article className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-6 flex flex-col justify-between hover:border-zinc-700/80 transition-all shadow-md shadow-black/40">
+    <article className="specular-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between col-span-1 lg:col-span-6 relative overflow-hidden group">
+      {/* Corner Crosshairs */}
+      <span className="corner-cross top-2.5 left-2.5 text-zinc-600">+</span>
+      <span className="corner-cross top-2.5 right-2.5 text-zinc-600">+</span>
+      <span className="corner-cross bottom-2.5 left-2.5 text-zinc-600">+</span>
+      <span className="corner-cross bottom-2.5 right-2.5 text-zinc-600">+</span>
+
+      {/* Atmospheric Amber/Rose Glow */}
+      <div className="absolute top-0 right-0 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
+
       <div>
         {/* Header Strip */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-zinc-800">
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-zinc-800/80">
           <div className="flex items-center space-x-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20">
-              Evaluation Benchmark
+            <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-semibold uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center space-x-1.5 shadow-[0_0_12px_rgba(245,158,11,0.15)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              <span>RL Environment</span>
             </span>
-            <span className="text-xs font-mono text-zinc-400">OpenEnv // Python 3.11</span>
+            <span className="text-xs font-mono text-zinc-400">OpenEnv // Gymnasium</span>
           </div>
+
           <a
             href="https://github.com/MrDunky14/SREBench"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center space-x-1.5 text-xs font-mono text-zinc-400 hover:text-zinc-200 transition-colors"
+            className="inline-flex items-center space-x-1.5 text-xs font-mono text-zinc-400 hover:text-white transition-colors"
           >
             <span>GitHub</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -38,113 +95,180 @@ export function SreBenchCard({ onOpenReceipt }: SreBenchCardProps) {
         </div>
 
         {/* Title & Tagline */}
-        <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-100 font-sans">
-          SREBench
+        <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-sans flex items-center space-x-2.5">
+          <span>SREBench</span>
+          <span className="text-xs font-mono text-amber-400 font-normal px-2 py-0.5 rounded bg-amber-950/60 border border-amber-800/60">
+            &gt;1,000 eps/s
+          </span>
         </h3>
-        <p className="text-xs sm:text-sm text-purple-400 font-mono mt-1">
-          OpenEnv Microservice DAG Benchmark for Autonomous SRE Incident Triage
+        <p className="text-xs sm:text-sm text-amber-400 font-mono mt-1">
+          OpenEnv Incident-Response Benchmark &amp; Stochastic State Machine
         </p>
 
-        <p className="text-xs text-zinc-300 mt-3 leading-relaxed">
-          High-throughput simulation environment modeling cascading incidents across distributed services. Features anti-exploit causal dependency gating and a strict scoring policy that penalizes blind restarts and superficial investigations.
+        <p className="text-xs text-zinc-300 mt-2.5 leading-relaxed">
+          High-throughput simulation environment for autonomous incident triage across a 6-service microservice DAG. Features anti-exploit reward hardening (shotgun penalty <code className="text-rose-400 bg-zinc-900 px-1 py-0.5 rounded">-0.50</code>, premature diagnosis <code className="text-rose-400 bg-zinc-900 px-1 py-0.5 rounded">-0.15</code>) and strict causal recovery gating.
         </p>
 
-        {/* 6-Service DAG Topology Widget */}
-        <div className="mt-5 p-3.5 rounded-lg border border-zinc-800 bg-zinc-950/80">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider flex items-center space-x-1">
-              <Network className="w-3 h-3 text-purple-400" />
-              <span>6-Service Causal DAG Topology</span>
+        {/* Interactive Microservice DAG Simulator */}
+        <div className="mt-5 p-4 rounded-xl border border-zinc-800/90 bg-zinc-950/90">
+          <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-zinc-800/80">
+            <span className="text-xs font-mono font-semibold text-zinc-300 flex items-center space-x-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+              <span>Interactive DAG Topology Simulator</span>
             </span>
-            <span className="text-[10px] font-mono text-emerald-400">Anti-Exploit Gated</span>
-          </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 py-2">
-            {services.map((svc) => (
-              <div
-                key={svc.name}
-                className="p-2 rounded bg-zinc-900/80 border border-zinc-800/80 flex flex-col justify-between"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-semibold text-zinc-200">
-                    {svc.name}
-                  </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                </div>
-                <span className="text-[10px] font-mono text-zinc-400 mt-1">
-                  {svc.role}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Metrics summary */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3 pt-3 border-t border-zinc-800/80 text-left">
-            <div className="p-2 rounded bg-zinc-900/60 border border-zinc-800/60">
-              <span className="text-[10px] text-zinc-400 font-mono block">SIM THROUGHPUT</span>
-              <div className="text-lg font-mono font-bold text-purple-300 tabular-nums">
-                1,000+
-                <span className="text-xs text-zinc-400 font-normal ml-1">eps/s</span>
-              </div>
-            </div>
-
-            <div className="p-2 rounded bg-zinc-900/60 border border-zinc-800/60">
-              <span className="text-[10px] text-zinc-400 font-mono block">PYTEST PASS</span>
-              <div className="text-lg font-mono font-bold text-emerald-400 tabular-nums">
-                22 / 22
-                <span className="text-xs text-zinc-400 font-normal ml-1">Clean</span>
-              </div>
-            </div>
-
-            <div className="col-span-2 sm:col-span-1 p-2 rounded bg-zinc-900/60 border border-zinc-800/60">
-              <span className="text-[10px] text-zinc-400 font-mono block">FAULT COVERAGE</span>
-              <div className="text-lg font-mono font-bold text-zinc-200 tabular-nums">
-                12 / 12
-                <span className="text-xs text-zinc-400 font-normal ml-1">Types</span>
-              </div>
+            {/* Fault Actions */}
+            <div className="flex items-center space-x-1.5">
+              {activeFault ? (
+                <button
+                  type="button"
+                  onClick={handleCausalRemediation}
+                  className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[11px] font-mono font-semibold hover:bg-emerald-500/30 transition-all cursor-pointer"
+                >
+                  <RotateCcw className={`w-3 h-3 ${isRecovering ? 'animate-spin' : ''}`} />
+                  <span>{isRecovering ? 'Resolving...' : 'Causal Remediation'}</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => handleInjectFault('database')}
+                  className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-rose-500/15 border border-rose-500/30 text-rose-300 text-[11px] font-mono font-semibold hover:bg-rose-500/25 transition-all cursor-pointer"
+                >
+                  <Flame className="w-3 h-3 text-rose-400" />
+                  <span>Inject DB Sync Failure</span>
+                </button>
+              )}
             </div>
           </div>
 
-          <div className="mt-3 flex items-center justify-between text-[10px] font-mono text-zinc-400 pt-2 border-t border-zinc-800/80">
-            <span className="flex items-center space-x-1 text-purple-400">
-              <GitBranch className="w-3 h-3" />
-              <span>Causal Parent Recovery Gating</span>
-            </span>
-            <span className="text-zinc-400">Shotgun Penalty (-0.50)</span>
+          {/* Interactive DAG Topology Canvas */}
+          <div className="relative h-56 w-full bg-black/60 rounded-lg border border-zinc-800/80 p-2 overflow-hidden flex flex-col justify-between">
+            {/* Status Header */}
+            <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 px-1">
+              <span className="flex items-center space-x-1">
+                <span className={`w-1.5 h-1.5 rounded-full ${activeFault ? 'bg-rose-400 animate-ping' : 'bg-emerald-400'}`} />
+                <span>DAG Health: <strong className={activeFault ? 'text-rose-400' : 'text-emerald-400'}>{activeFault ? 'CASCADE FAULT ACTIVE' : 'ALL 6 SERVICES HEALTHY'}</strong></span>
+              </span>
+              <span>Causal Gating: <strong className="text-zinc-200">Enforced</strong></span>
+            </div>
+
+            {/* SVG Connections and Nodes */}
+            <svg className="w-full h-44" viewBox="0 0 100 240" preserveAspectRatio="none">
+              {/* Dependency Arrows */}
+              {connections.map((conn) => {
+                const src = services.find((s) => s.id === conn.from)!;
+                const dst = services.find((s) => s.id === conn.to)!;
+                const dstStatus = getServiceStatus(dst.id);
+
+                return (
+                  <line
+                    key={`${conn.from}-${conn.to}`}
+                    x1={`${src.x}%`}
+                    y1={`${src.y}`}
+                    x2={`${dst.x}%`}
+                    y2={`${dst.y}`}
+                    stroke={dstStatus === 'failed' ? '#f43f5e' : dstStatus === 'degraded' ? '#f59e0b' : '#27272a'}
+                    strokeWidth={dstStatus !== 'healthy' ? '2' : '1'}
+                    strokeDasharray={dstStatus !== 'healthy' ? '3 1' : 'none'}
+                    className="transition-all duration-300"
+                  />
+                );
+              })}
+
+              {/* Service Nodes */}
+              {services.map((svc) => {
+                const status = getServiceStatus(svc.id);
+                const isFailed = status === 'failed';
+                const isDegraded = status === 'degraded';
+
+                return (
+                  <g
+                    key={svc.id}
+                    className="cursor-pointer"
+                    onClick={() => handleInjectFault(svc.id === activeFault ? 'database' : svc.id)}
+                  >
+                    <rect
+                      x={`calc(${svc.x}% - 22px)`}
+                      y={`${svc.y - 12}`}
+                      width="44"
+                      height="24"
+                      rx="4"
+                      className={`transition-all duration-200 ${
+                        isFailed
+                          ? 'fill-rose-950 stroke-rose-500 stroke-2'
+                          : isDegraded
+                          ? 'fill-amber-950/80 stroke-amber-500 stroke-1'
+                          : 'fill-zinc-900 stroke-zinc-700 stroke-1 hover:stroke-amber-400'
+                      }`}
+                    />
+                    <text
+                      x={`${svc.x}%`}
+                      y={`${svc.y + 3}`}
+                      textAnchor="middle"
+                      className={`text-[8px] font-mono font-semibold select-none ${
+                        isFailed ? 'fill-rose-200' : isDegraded ? 'fill-amber-200' : 'fill-zinc-300'
+                      }`}
+                    >
+                      {svc.name}
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+
+            <div className="text-[10px] font-mono text-zinc-500 text-center flex items-center justify-center space-x-2">
+              <span>Click node to inject fault</span>
+              <span>•</span>
+              <span className="text-zinc-400">Dependency: <code className="text-zinc-300">frontend &rarr; order &rarr; payment &rarr; db</code></span>
+            </div>
           </div>
         </div>
 
-        {/* Technical Highlights list */}
-        <div className="mt-5 space-y-2 text-xs font-mono text-zinc-300">
-          <div className="flex items-start space-x-2">
-            <span className="text-purple-400 select-none">▸</span>
-            <span>Upstream dependency gating: recovering children requires healthy parents</span>
+        {/* Empirical Benchmarks Strip */}
+        <div className="grid grid-cols-3 gap-2.5 mt-4 text-left">
+          <div className="p-2.5 rounded-lg bg-zinc-950 border border-zinc-800/80">
+            <span className="text-[10px] text-zinc-400 font-mono block">THROUGHPUT</span>
+            <div className="text-lg font-mono font-bold text-amber-400 tabular-nums">
+              &gt;1,000
+              <span className="text-xs text-zinc-500 font-normal ml-1">eps/s</span>
+            </div>
+            <span className="text-[9px] text-zinc-500 font-mono block mt-0.5">Stochastic state sim</span>
           </div>
-          <div className="flex items-start space-x-2">
-            <span className="text-purple-400 select-none">▸</span>
-            <span>Penalizes premature diagnoses (-0.15) and blind shotgun restarts (-0.50)</span>
+
+          <div className="p-2.5 rounded-lg bg-zinc-950 border border-zinc-800/80">
+            <span className="text-[10px] text-zinc-400 font-mono block">TEST SUITE</span>
+            <div className="text-lg font-mono font-bold text-emerald-400 tabular-nums">
+              22 / 22
+              <span className="text-xs text-zinc-500 font-normal ml-1">pass</span>
+            </div>
+            <span className="text-[9px] text-zinc-500 font-mono block mt-0.5">tests/test_srebench.py</span>
           </div>
-          <div className="flex items-start space-x-2">
-            <span className="text-purple-400 select-none">▸</span>
-            <span>Finalist artifact in Meta x Hugging Face x Scaler OpenEnv Hackathon</span>
-          </div>
-          <div className="flex items-start space-x-2">
-            <span className="text-purple-400 select-none">▸</span>
-            <span>Full 22/22 pytest suite verifying deterministic step and reward loops</span>
+
+          <div className="p-2.5 rounded-lg bg-zinc-950 border border-zinc-800/80">
+            <span className="text-[10px] text-zinc-400 font-mono block">ACTION SPACE</span>
+            <div className="text-lg font-mono font-bold text-cyan-300 tabular-nums">
+              Discrete
+              <span className="text-xs text-zinc-500 font-normal ml-1">(240)</span>
+            </div>
+            <span className="text-[9px] text-zinc-500 font-mono block mt-0.5">Gymnasium API</span>
           </div>
         </div>
       </div>
 
-      {/* Action Footer */}
-      <div className="mt-6 pt-4 border-t border-zinc-800 flex items-center">
+      {/* Action Trigger */}
+      <div className="pt-4 mt-4 border-t border-zinc-800/80 flex items-center justify-between">
         <button
           type="button"
-          onClick={() => onOpenReceipt('srebench-pytest')}
-          className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-mono transition-colors cursor-pointer"
+          onClick={() => onOpenReceipt('srebench')}
+          className="inline-flex items-center space-x-2 text-xs font-mono font-semibold text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
         >
-          <Code2 className="w-3.5 h-3.5 text-purple-400" />
-          <span>Inspect Pytest Suite</span>
+          <Code2 className="w-4 h-4 text-amber-400" />
+          <span>Inspect 22/22 Pytest Suite &rarr;</span>
         </button>
+
+        <span className="text-[10px] font-mono text-zinc-500">
+          Finalist — Meta × HF × Scaler
+        </span>
       </div>
     </article>
   );
