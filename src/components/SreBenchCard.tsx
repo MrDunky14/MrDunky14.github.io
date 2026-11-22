@@ -44,12 +44,12 @@ export function SreBenchCard({ onOpenReceipt }: SreBenchCardProps) {
   };
 
   const services = [
-    { id: 'frontend', name: 'frontend-gw', tier: 'Tier 0: Entry', x: 50, y: 32 },
-    { id: 'auth', name: 'auth-svc', tier: 'Tier 1: Auth', x: 25, y: 92 },
-    { id: 'order', name: 'order-svc', tier: 'Tier 1: Checkout', x: 75, y: 92 },
-    { id: 'payment', name: 'payment-svc', tier: 'Tier 2: Billing', x: 25, y: 152 },
-    { id: 'catalog', name: 'catalog-svc', tier: 'Tier 2: Inventory', x: 75, y: 152 },
-    { id: 'database', name: 'db-replica', tier: 'Tier 3: Storage', x: 50, y: 212 },
+    { id: 'frontend', name: 'frontend-gw', tier: 'Tier 0: Entry', x: 260, y: 24 },
+    { id: 'auth', name: 'auth-svc', tier: 'Tier 1: Auth', x: 150, y: 78 },
+    { id: 'order', name: 'order-svc', tier: 'Tier 1: Checkout', x: 370, y: 78 },
+    { id: 'payment', name: 'payment-svc', tier: 'Tier 2: Billing', x: 150, y: 132 },
+    { id: 'catalog', name: 'catalog-svc', tier: 'Tier 2: Inventory', x: 370, y: 132 },
+    { id: 'database', name: 'db-replica', tier: 'Tier 3: Storage', x: 260, y: 182 },
   ];
 
   const connections = [
@@ -153,7 +153,7 @@ export function SreBenchCard({ onOpenReceipt }: SreBenchCardProps) {
             </div>
 
             {/* SVG Connections and Nodes */}
-            <svg className="w-full h-44" viewBox="0 0 100 240" preserveAspectRatio="none">
+            <svg className="w-full h-44" viewBox="0 0 520 206">
               {/* Dependency Arrows */}
               {connections.map((conn) => {
                 const src = services.find((s) => s.id === conn.from)!;
@@ -163,13 +163,13 @@ export function SreBenchCard({ onOpenReceipt }: SreBenchCardProps) {
                 return (
                   <line
                     key={`${conn.from}-${conn.to}`}
-                    x1={`${src.x}%`}
-                    y1={`${src.y}`}
-                    x2={`${dst.x}%`}
-                    y2={`${dst.y}`}
+                    x1={src.x}
+                    y1={src.y}
+                    x2={dst.x}
+                    y2={dst.y}
                     stroke={dstStatus === 'failed' ? '#f43f5e' : dstStatus === 'degraded' ? '#f59e0b' : '#27272a'}
-                    strokeWidth={dstStatus !== 'healthy' ? '2' : '1'}
-                    strokeDasharray={dstStatus !== 'healthy' ? '3 1' : 'none'}
+                    strokeWidth={dstStatus !== 'healthy' ? '2' : '1.5'}
+                    strokeDasharray={dstStatus !== 'healthy' ? '4 2' : 'none'}
                     className="transition-all duration-300"
                   />
                 );
@@ -184,28 +184,50 @@ export function SreBenchCard({ onOpenReceipt }: SreBenchCardProps) {
                 return (
                   <g
                     key={svc.id}
-                    className="cursor-pointer"
+                    className="cursor-pointer group/node"
                     onClick={() => handleInjectFault(svc.id === activeFault ? 'database' : svc.id)}
                   >
                     <rect
-                      x={`calc(${svc.x}% - 22px)`}
-                      y={`${svc.y - 12}`}
-                      width="44"
-                      height="24"
-                      rx="4"
+                      x={svc.x - 52}
+                      y={svc.y - 13}
+                      width="104"
+                      height="26"
+                      rx="6"
                       className={`transition-all duration-200 ${
                         isFailed
-                          ? 'fill-rose-950 stroke-rose-500 stroke-2'
+                          ? 'fill-rose-950/90 stroke-rose-500 stroke-1.5 shadow-[0_0_12px_rgba(244,63,94,0.5)]'
                           : isDegraded
-                          ? 'fill-amber-950/80 stroke-amber-500 stroke-1'
-                          : 'fill-zinc-900 stroke-zinc-700 stroke-1 hover:stroke-amber-400'
+                          ? 'fill-amber-950/80 stroke-amber-500 stroke-1.5'
+                          : 'fill-zinc-900/95 stroke-zinc-700/80 stroke-1 hover:stroke-amber-400 hover:fill-zinc-800'
                       }`}
                     />
+                    {/* Status Dot */}
+                    {isFailed && (
+                      <circle
+                        cx={svc.x - 38}
+                        cy={svc.y}
+                        r="5"
+                        className="fill-rose-400/30 animate-ping pointer-events-none"
+                      />
+                    )}
+                    <circle
+                      cx={svc.x - 38}
+                      cy={svc.y}
+                      r="3.5"
+                      className={
+                        isFailed
+                          ? 'fill-rose-400'
+                          : isDegraded
+                          ? 'fill-amber-400'
+                          : 'fill-emerald-400'
+                      }
+                    />
+                    {/* Service Name Label */}
                     <text
-                      x={`${svc.x}%`}
-                      y={`${svc.y + 3}`}
+                      x={svc.x + 8}
+                      y={svc.y + 3.5}
                       textAnchor="middle"
-                      className={`text-[8px] font-mono font-semibold select-none ${
+                      className={`text-[10px] font-mono font-medium select-none tracking-tight ${
                         isFailed ? 'fill-rose-200' : isDegraded ? 'fill-amber-200' : 'fill-zinc-300'
                       }`}
                     >

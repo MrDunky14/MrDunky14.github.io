@@ -14,15 +14,16 @@ if (fs.existsSync(distHtml)) {
   console.log('✓ Copied dist/index.html -> ./index.html');
 }
 
-// Copy dist/assets to root assets
+// Copy dist/assets to root assets (cleaning obsolete bundles)
 const distAssets = path.join(dist, 'assets');
 const rootAssets = path.join(root, 'assets');
 if (fs.existsSync(distAssets)) {
-  if (!fs.existsSync(rootAssets)) {
-    fs.mkdirSync(rootAssets, { recursive: true });
+  if (fs.existsSync(rootAssets)) {
+    fs.rmSync(rootAssets, { recursive: true, force: true });
   }
+  fs.mkdirSync(rootAssets, { recursive: true });
   fs.cpSync(distAssets, rootAssets, { recursive: true });
-  console.log('✓ Copied dist/assets -> ./assets');
+  console.log('✓ Cleaned and copied dist/assets -> ./assets');
 }
 
 // Copy dist/favicon.svg to root favicon.svg if present

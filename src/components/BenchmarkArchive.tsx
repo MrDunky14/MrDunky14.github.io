@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Table, Filter, ShieldCheck, Check } from 'lucide-react';
+import { Table, Filter, ShieldCheck, Check, Search, X } from 'lucide-react';
 import { BENCHMARK_ARCHIVE } from '../data/systemsData';
 
 export function BenchmarkArchive() {
@@ -63,14 +63,25 @@ export function BenchmarkArchive() {
             ))}
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="relative flex items-center w-full sm:w-64">
+            <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-2.5 pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search benchmarks..."
-              className="w-full sm:w-56 px-3 py-1 text-xs font-mono rounded bg-zinc-950 border border-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-cyan-500"
+              className="w-full pl-8 pr-7 py-1.5 text-xs font-mono rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-cyan-500/80 focus:ring-1 focus:ring-cyan-500/40 transition-all"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2 text-zinc-500 hover:text-zinc-300 p-0.5 rounded cursor-pointer"
+                aria-label="Clear benchmark search"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
           </div>
         </div>
 

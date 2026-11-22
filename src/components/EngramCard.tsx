@@ -27,15 +27,15 @@ export function EngramCard({ onOpenReceipt }: EngramCardProps) {
     setCommittedBlocks((prev) => (prev >= 28 ? 6 : prev + 4));
   };
 
-  // Node positions in the interactive cortex DAG
+  // Node positions in the interactive cortex DAG (viewBox: 0 0 500 170)
   const nodes = [
-    { id: 'ROOT', label: 'ROOT', x: 50, y: 35, hop: 0, v: '1.00V' },
-    { id: 'C1', label: 'Cortex.1', x: 22, y: 95, hop: 1, v: '0.74V' },
-    { id: 'C2', label: 'Cortex.2', x: 78, y: 95, hop: 1, v: '0.68V' },
-    { id: 'N1', label: 'Synapse.A', x: 12, y: 165, hop: 2, v: '0.52V' },
-    { id: 'N2', label: 'Synapse.B', x: 42, y: 165, hop: 2, v: '0.48V' },
-    { id: 'M1', label: 'Motor.X', x: 68, y: 165, hop: 2, v: '0.45V' },
-    { id: 'M2', label: 'Motor.Y', x: 90, y: 165, hop: 2, v: '0.41V' },
+    { id: 'ROOT', label: 'ROOT', x: 250, y: 30, hop: 0, v: '1.00V' },
+    { id: 'C1', label: 'Cortex.1', x: 150, y: 84, hop: 1, v: '0.74V' },
+    { id: 'C2', label: 'Cortex.2', x: 350, y: 84, hop: 1, v: '0.68V' },
+    { id: 'N1', label: 'Synapse.A', x: 80, y: 138, hop: 2, v: '0.52V' },
+    { id: 'N2', label: 'Synapse.B', x: 210, y: 138, hop: 2, v: '0.48V' },
+    { id: 'M1', label: 'Motor.X', x: 290, y: 138, hop: 2, v: '0.45V' },
+    { id: 'M2', label: 'Motor.Y', x: 420, y: 138, hop: 2, v: '0.41V' },
   ];
 
   const edges = [
@@ -160,7 +160,7 @@ export function EngramCard({ onOpenReceipt }: EngramCardProps) {
               </div>
 
               {/* Interactive SVG Node Mesh */}
-              <svg className="w-full h-36" viewBox="0 0 100 200" preserveAspectRatio="none">
+              <svg className="w-full h-36" viewBox="0 0 500 170">
                 {/* Edges */}
                 {edges.map((edge) => {
                   const src = nodes.find((n) => n.id === edge.from)!;
@@ -172,13 +172,13 @@ export function EngramCard({ onOpenReceipt }: EngramCardProps) {
                   return (
                     <line
                       key={`${edge.from}-${edge.to}`}
-                      x1={`${src.x}%`}
-                      y1={`${src.y}`}
-                      x2={`${dst.x}%`}
-                      y2={`${dst.y}`}
+                      x1={src.x}
+                      y1={src.y}
+                      x2={dst.x}
+                      y2={dst.y}
                       stroke={isEdgeActive ? '#10b981' : '#27272a'}
-                      strokeWidth={isEdgeActive ? '2.5' : '1'}
-                      strokeDasharray={isEdgeActive ? '3 1' : 'none'}
+                      strokeWidth={isEdgeActive ? '2.5' : '1.5'}
+                      strokeDasharray={isEdgeActive ? '4 2' : 'none'}
                       className="transition-all duration-300"
                     />
                   );
@@ -192,31 +192,40 @@ export function EngramCard({ onOpenReceipt }: EngramCardProps) {
                     (pulseStep === 3 && node.hop === 2);
 
                   return (
-                    <g key={node.id} className="cursor-pointer" onClick={handleTriggerPulse}>
+                    <g key={node.id} className="cursor-pointer group/node" onClick={handleTriggerPulse}>
+                      {/* Pulse Ripple */}
+                      {isNodePulsed && (
+                        <circle
+                          cx={node.x}
+                          cy={node.y}
+                          r="18"
+                          className="fill-emerald-400/20 animate-ping pointer-events-none"
+                        />
+                      )}
                       <circle
-                        cx={`${node.x}%`}
-                        cy={`${node.y}`}
-                        r={isNodePulsed ? '10' : '7'}
+                        cx={node.x}
+                        cy={node.y}
+                        r={isNodePulsed ? '12' : '9'}
                         className={`transition-all duration-200 ${
                           isNodePulsed
                             ? 'fill-emerald-400 stroke-emerald-200 stroke-2'
-                            : 'fill-zinc-900 stroke-zinc-700 stroke-1 hover:stroke-emerald-400'
+                            : 'fill-zinc-900 stroke-zinc-700 stroke-1.5 hover:stroke-emerald-400 hover:fill-zinc-800'
                         }`}
                       />
                       <text
-                        x={`${node.x}%`}
-                        y={`${node.y + 16}`}
+                        x={node.x}
+                        y={node.y + 19}
                         textAnchor="middle"
-                        className="text-[8px] font-mono fill-zinc-400 select-none"
+                        className="text-[10px] font-mono fill-zinc-400 select-none tracking-tight font-medium"
                       >
                         {node.label}
                       </text>
                       {isNodePulsed && (
                         <text
-                          x={`${node.x}%`}
-                          y={`${node.y - 10}`}
+                          x={node.x}
+                          y={node.y - 14}
                           textAnchor="middle"
-                          className="text-[8px] font-mono fill-emerald-300 font-bold select-none animate-bounce"
+                          className="text-[10px] font-mono fill-emerald-300 font-bold select-none"
                         >
                           {node.v}
                         </text>

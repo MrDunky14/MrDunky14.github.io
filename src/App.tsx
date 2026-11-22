@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { FlagshipSection } from './components/FlagshipSection';
@@ -19,6 +19,33 @@ export function App() {
   const [activeReceiptId, setActiveReceiptId] = useState<string | null>(null);
   const [isReceiptModalOpen, setIsReceiptModalOpen] = useState(false);
   const [isVisualProofMode, setIsVisualProofMode] = useState(false);
+
+  // Global keyboard shortcut listener for ⌘K / Ctrl+K and /
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input or textarea
+      const target = e.target as HTMLElement | null;
+      const isInput =
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.isContentEditable);
+
+      if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
+        return;
+      }
+
+      if (e.key === '/' && !isInput) {
+        e.preventDefault();
+        setIsCommandPaletteOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleOpenReceipt = (receiptId: string) => {
     setActiveReceiptId(receiptId);

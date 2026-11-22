@@ -89,12 +89,12 @@ export function Header({ onOpenCommandPalette }: HeaderProps) {
           <button
             type="button"
             onClick={onOpenCommandPalette}
-            className="flex items-center space-x-2 px-2.5 py-1.5 rounded border border-zinc-800 bg-zinc-900/80 hover:bg-zinc-800/80 text-zinc-400 hover:text-zinc-200 transition-all text-xs font-mono cursor-pointer"
-            aria-label="Open command palette"
+            className="flex items-center space-x-2.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/90 hover:bg-zinc-800/80 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 transition-all text-xs font-mono cursor-pointer shadow-sm group"
+            aria-label="Search systems and receipts (⌘K)"
           >
-            <Search className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline text-[11px]">Search</span>
-            <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] text-zinc-400 bg-zinc-950 border border-zinc-800 rounded">
+            <Search className="w-3.5 h-3.5 text-zinc-400 group-hover:text-cyan-400 transition-colors" />
+            <span className="hidden sm:inline text-[11px] text-zinc-400 group-hover:text-zinc-300">Search systems...</span>
+            <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] text-zinc-400 bg-zinc-950 border border-zinc-800 rounded font-mono group-hover:border-zinc-700">
               ⌘K
             </kbd>
           </button>
