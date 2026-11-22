@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none">
+  <rect width="32" height="32" rx="6" fill="#09090b" stroke="#27272a" stroke-width="1.5" />
+  <!-- Systems Glyph: Interlocking Node / Kernel Execution Bracket -->
+  <path d="M9 7V25" stroke="#a1a1aa" stroke-width="2.5" stroke-linecap="round" />
+  <path d="M23 10L14 16L23 22" stroke="#fafafa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <circle cx="14" cy="16" r="2.2" fill="#06b6d4" />
+</svg>
